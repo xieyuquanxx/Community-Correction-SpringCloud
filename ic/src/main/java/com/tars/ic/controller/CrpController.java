@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/ic/crp")
@@ -33,6 +34,14 @@ public class CrpController {
                       .eq("dxbh", dxbh)
                       .select("xm")
                       .one().getXm();
+    }
+
+    @GetMapping("/random")
+    public String randomDxbh() {
+        List<CorrectionPeople> list = service.list();
+        Random random = new Random();
+        int i = random.nextInt(list.size());
+        return list.get(i).getDxbh();
     }
 
 

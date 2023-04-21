@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="termProcess" name="termProcess" isExecutable="true">
+        <startEvent id="sid-65024774-1b2c-4570-8d34-7a07fc87c698"/>
+        <userTask id="sfs" name="司法所">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.termination.tasks.TermSFSHandler"/>
+            </extensionElements>
+        </userTask>
+        <userTask id="jzjg" name="矫正机构">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.termination.tasks.CorrectionTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <endEvent id="sid-499f0783-0903-4c69-be1e-8434e3a59e94"/>
+        <sequenceFlow id="sid-3cd10517-ed9f-4271-88d5-e0ac8a7393ba"
+                      sourceRef="sfs" targetRef="jzjg"/>
+        <sequenceFlow id="sid-5b29dc41-697e-48f0-8198-9bb3df63a571"
+                      sourceRef="sid-65024774-1b2c-4570-8d34-7a07fc87c698"
+                      targetRef="sfs"/>
+        <sequenceFlow id="sid-7ef9b3ff-9678-41f6-9a10-bca8f70b5e2f"
+                      sourceRef="jzjg"
+                      targetRef="sid-499f0783-0903-4c69-be1e-8434e3a59e94"/>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_termProcess">
+        <bpmndi:BPMNPlane bpmnElement="termProcess"
+                          id="BPMNPlane_termProcess">
+            <bpmndi:BPMNShape
+                    id="shape-64a9866e-9881-4056-91cd-2f23e3012612"
+                    bpmnElement="sid-65024774-1b2c-4570-8d34-7a07fc87c698">
+                <omgdc:Bounds x="-110.0" y="-5.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-c15e3581-0af3-4558-989a-1b28fe7e8a73"
+                    bpmnElement="sfs">
+                <omgdc:Bounds x="-55.0" y="-30.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-47c99678-b348-4cd5-99db-9576fd348d09"
+                    bpmnElement="jzjg">
+                <omgdc:Bounds x="85.0" y="-30.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-38c2e3f9-327c-4a83-abcb-f17be2200eaf"
+                    bpmnElement="sid-499f0783-0903-4c69-be1e-8434e3a59e94">
+                <omgdc:Bounds x="265.0" y="-5.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-94c1cf25-d15e-455d-af8b-1604a3a76f41"
+                    bpmnElement="sid-3cd10517-ed9f-4271-88d5-e0ac8a7393ba">
+                <omgdi:waypoint x="45.0" y="10.0"/>
+                <omgdi:waypoint x="85.0" y="10.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge
+                    id="edge-facb270f-e369-4f00-83a4-1be42a2a59e7"
+                    bpmnElement="sid-5b29dc41-697e-48f0-8198-9bb3df63a571">
+                <omgdi:waypoint x="-80.0" y="10.0"/>
+                <omgdi:waypoint x="-55.0" y="10.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge
+                    id="edge-210e6d60-9bb5-4276-9072-fd848648511d"
+                    bpmnElement="sid-7ef9b3ff-9678-41f6-9a10-bca8f70b5e2f">
+                <omgdi:waypoint x="185.0" y="10.0"/>
+                <omgdi:waypoint x="265.0" y="10.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
