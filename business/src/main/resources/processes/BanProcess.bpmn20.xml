@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="BanProcess" name="BanProcess" isExecutable="true">
+        <startEvent id="sid-074290aa-8cb0-4e52-911f-4e7a50dab349"/>
+        <userTask id="people" name="矫正人员">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.business.task.Ban.BanCrpTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-71e8727a-ce40-405f-b93b-78c4826126f2"
+                      sourceRef="sid-074290aa-8cb0-4e52-911f-4e7a50dab349"
+                      targetRef="people"/>
+        <userTask id="sfs" name="司法所">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.business.task.Ban.BanSFSTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-4f754e60-8688-497f-9cad-7a82d519f9db"
+                      sourceRef="people" targetRef="sfs"/>
+        <userTask id="jzjg" name="社区矫正机构">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.business.task.Ban.BanJZJGTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-990bb079-4836-42c8-a6ae-2007c9eb84ca"
+                      sourceRef="sfs" targetRef="jzjg"/>
+        <endEvent id="sid-f50f2ba0-8571-4e4d-bc32-23412fd48e0c"/>
+        <sequenceFlow id="sid-7645c481-fcae-43bb-85ac-17f3828b86d0"
+                      sourceRef="jzjg"
+                      targetRef="sid-f50f2ba0-8571-4e4d-bc32-23412fd48e0c"/>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_BanProcess">
+        <bpmndi:BPMNPlane bpmnElement="BanProcess"
+                          id="BPMNPlane_BanProcess">
+            <bpmndi:BPMNShape
+                    id="shape-5e2b9c26-46d6-415e-bf71-e9c86fdeebdb"
+                    bpmnElement="sid-074290aa-8cb0-4e52-911f-4e7a50dab349">
+                <omgdc:Bounds x="-200.0" y="-5.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-f2398e43-01d3-4e0d-9d14-03bd99254e19"
+                    bpmnElement="people">
+                <omgdc:Bounds x="-130.0" y="-40.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-2e1d535e-e461-4245-ae4e-d4e5339fa8c0"
+                    bpmnElement="sid-71e8727a-ce40-405f-b93b-78c4826126f2">
+                <omgdi:waypoint x="-170.0" y="2.5"/>
+                <omgdi:waypoint x="-130.0" y="0.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape
+                    id="shape-2b489efc-3f31-4c6c-8167-1da3c4fba6ab"
+                    bpmnElement="sfs">
+                <omgdc:Bounds x="35.0" y="-40.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-1ab5e8a8-8025-4211-ae2c-c747269c3c9b"
+                    bpmnElement="sid-4f754e60-8688-497f-9cad-7a82d519f9db">
+                <omgdi:waypoint x="-30.0" y="0.0"/>
+                <omgdi:waypoint x="35.0" y="0.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape
+                    id="shape-dafc6c0b-7299-49fb-814e-0aeaf0bfd860"
+                    bpmnElement="jzjg">
+                <omgdc:Bounds x="35.0" y="90.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-650f21b3-bb16-444c-845d-47cfdf0b2968"
+                    bpmnElement="sid-990bb079-4836-42c8-a6ae-2007c9eb84ca">
+                <omgdi:waypoint x="85.0" y="40.0"/>
+                <omgdi:waypoint x="85.0" y="90.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape
+                    id="shape-b8d1d1fc-bea5-4e8e-be97-702cf50ebefc"
+                    bpmnElement="sid-f50f2ba0-8571-4e4d-bc32-23412fd48e0c">
+                <omgdc:Bounds x="-94.99999" y="125.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-ab0effa5-8128-4cb4-9d40-4dc83308c188"
+                    bpmnElement="sid-7645c481-fcae-43bb-85ac-17f3828b86d0">
+                <omgdi:waypoint x="35.0" y="130.0"/>
+                <omgdi:waypoint x="-64.99999" y="132.5"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

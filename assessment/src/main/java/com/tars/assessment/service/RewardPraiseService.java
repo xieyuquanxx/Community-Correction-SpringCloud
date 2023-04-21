@@ -1,0 +1,8 @@
+package com.tars.assessment.service;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.tars.assessment.entity.RewardInfo;
+import com.tars.assessment.entity.RewardPraiseInfo;
+
+public interface RewardPraiseService extends IService<RewardPraiseInfo> {
+}

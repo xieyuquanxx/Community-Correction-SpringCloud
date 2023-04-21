@@ -1,0 +1,23 @@
+package com.tars.ic.entity;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
+@Data
+@TableName("crp_check_tbl")
+public class CrpCheck {
+    private String dxbh;
+    @TableField(exist = false)
+    private String xm;
+    private String date;
+    private Boolean status;
+
+    public CrpCheck(String dxbh, String xm, String date,
+                    Boolean status) {
+        this.dxbh = dxbh;
+        this.xm = xm;
+        this.date = date;
+        this.status = status;
+    }
+}

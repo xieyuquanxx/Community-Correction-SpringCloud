@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: noexit
+  profiles:
+    active: dev
+  cloud:
+    config: # config-server的地址
+      uri: http://localhost:9000
+      failFast: true
+
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://localhost:9001/eureka/

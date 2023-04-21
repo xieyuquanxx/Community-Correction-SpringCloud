@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="lgProcess" name="lgProcess" isExecutable="true">
+        <startEvent id="sid-1cb9f068-2c4b-4552-b60c-51d2b413e491"/>
+        <endEvent id="sid-17e9a21e-a1c2-4159-9422-68ef6540894a"/>
+        <userTask id="xjjzjg" name="县级矫正机构">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.assessment.task.RewardLgXJTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-ae69c53c-6818-4f16-94cc-85de0b023ab9"
+                      sourceRef="sid-1cb9f068-2c4b-4552-b60c-51d2b413e491"
+                      targetRef="xjjzjg"/>
+        <userTask id="sjzjg" name="市级矫正机构">
+            <extensionElements>
+                <flowable:taskListener event="create"
+                                       class="com.tars.assessment.task.RewardLgSJTaskHandler"/>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-88f853fd-1163-4659-a6af-d1df9320f1fb"
+                      sourceRef="xjjzjg" targetRef="sjzjg"/>
+        <sequenceFlow id="sid-4a8661da-2c2c-494e-9ad1-07e24ef4a9ca"
+                      sourceRef="sjzjg"
+                      targetRef="sid-17e9a21e-a1c2-4159-9422-68ef6540894a"/>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_lgProcess">
+        <bpmndi:BPMNPlane bpmnElement="lgProcess"
+                          id="BPMNPlane_lgProcess">
+            <bpmndi:BPMNShape
+                    id="shape-64ef1f65-2e91-4a8a-ab50-9f98d93d98a6"
+                    bpmnElement="sid-1cb9f068-2c4b-4552-b60c-51d2b413e491">
+                <omgdc:Bounds x="-70.0" y="-20.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-afd12977-a657-4b58-803c-bb740917b182"
+                    bpmnElement="sid-17e9a21e-a1c2-4159-9422-68ef6540894a">
+                <omgdc:Bounds x="280.0" y="-20.0" width="30.0"
+                              height="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape
+                    id="shape-13135d3a-21d4-4668-9df7-90318c3dacba"
+                    bpmnElement="xjjzjg">
+                <omgdc:Bounds x="10.0" y="-50.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-8633670b-f24b-4d3e-a68c-5407254dfed5"
+                    bpmnElement="sid-ae69c53c-6818-4f16-94cc-85de0b023ab9">
+                <omgdi:waypoint x="-40.0" y="-12.5"/>
+                <omgdi:waypoint x="10.0" y="-10.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape
+                    id="shape-741664f1-1bbd-4f04-95d2-4090eaf3b017"
+                    bpmnElement="sjzjg">
+                <omgdc:Bounds x="145.0" y="-50.0" width="100.0"
+                              height="80.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge
+                    id="edge-efdac7f9-8144-4fa7-9f68-9cb985bd1b5c"
+                    bpmnElement="sid-88f853fd-1163-4659-a6af-d1df9320f1fb">
+                <omgdi:waypoint x="110.0" y="-10.0"/>
+                <omgdi:waypoint x="145.0" y="-10.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge
+                    id="edge-6290136f-cdb8-45d5-8667-af494b109b44"
+                    bpmnElement="sid-4a8661da-2c2c-494e-9ad1-07e24ef4a9ca">
+                <omgdi:waypoint x="245.0" y="-10.0"/>
+                <omgdi:waypoint x="280.0" y="-12.5"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
