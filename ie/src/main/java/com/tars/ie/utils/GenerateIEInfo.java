@@ -2,8 +2,6 @@ package com.tars.ie.utils;
 
 import com.tars.ie.entity.IEInfo;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class GenerateIEInfo {
@@ -24,8 +22,9 @@ public class GenerateIEInfo {
         String names = "张王李赵谢刘孙";
         String nums = "零一二三四五六七八九十";
         Random random = new Random();
-        int randomName = random.nextInt(names.length()) + 1;
+        int randomName = random.nextInt(names.length());
         int randomLength = random.nextInt(3);
+        if (randomLength == 1) randomLength++;
         StringBuilder name = new StringBuilder(
                 String.valueOf(names.charAt(randomName)));
         for (int i = 0; i < randomLength; i++) {
@@ -41,6 +40,7 @@ public class GenerateIEInfo {
         ieInfo.setBgrxm(getXM());
         ieInfo.setFinish(-1);
         ieInfo.setIsDelete(0);
+        ieInfo.setStep(0);
         return ieInfo;
     }
 
