@@ -11,10 +11,13 @@ public class CrpCheck {
     @TableField(exist = false)
     private String xm;
     private String date;
-    private Boolean status;
+    private String status;
+
+    public CrpCheck() {
+    }
 
     public CrpCheck(String dxbh, String xm, String date,
-                    Boolean status) {
+                    String status) {
         this.dxbh = dxbh;
         this.xm = xm;
         this.date = date;

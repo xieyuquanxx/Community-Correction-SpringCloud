@@ -7,9 +7,11 @@ import com.tars.ic.entity.others.Exit;
 import com.tars.ic.entity.others.ScoreInfo;
 import com.tars.ic.service.CrpCheckService;
 import com.tars.ic.service.CrpService;
+import com.tars.ic.service.remote.RemoteAssessmentService;
+import com.tars.ic.service.remote.RemoteCateService;
+import com.tars.ic.service.remote.RemoteNoExitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,18 +24,24 @@ import java.util.Random;
 public class CrpController {
     @Autowired
     private CrpService service;
-
     @Autowired
     private CrpCheckService checkService;
+
+    @Autowired
+    private RemoteCateService cateService;
+    @Autowired
+    private RemoteAssessmentService assessmentService;
+    @Autowired
+    private RemoteNoExitService exitService;
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
     @GetMapping("/xm/{dxbh}")
     public String getName(@PathVariable("dxbh") String dxbh) {
         return service.query()
-                      .eq("dxbh", dxbh)
-                      .select("xm")
-                      .one().getXm();
+                .eq("dxbh", dxbh)
+                .select("xm")
+                .one().getXm();
     }
 
     @GetMapping("/random")
@@ -62,20 +70,22 @@ public class CrpController {
 
     @GetMapping("/nocheck/all")
     public ResponseResult<List<CrpCheck>> getNoCheckAll() {
-        List<CrpCheck> list = checkService.query()
-                                          .eq("status", 0)
-                                          .list();
-        for (CrpCheck item : list) {
-            item.setXm(getName(item.getDxbh()));
+        try {
+            List<CrpCheck> list = checkService.query()
+                    .eq("status", "0")
+                    .list().stream()
+                    .peek(e -> e.setXm(getName(e.getDxbh()))).toList();
+            return ResponseResult.success(list);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
         }
-        return ResponseResult.success(list);
     }
 
     @GetMapping("/{id}")
     public ResponseResult<CorrectionPeople> getCrp(@PathVariable(
             "id") String id) {
         CorrectionPeople temp = service.query().eq("dxbh", id)
-                                       .one();
+                .one();
         if (temp == null) {
             return ResponseResult.fail(null,
                     "没有找到对象编号为" + id + "的矫正对象");
@@ -85,34 +95,27 @@ public class CrpController {
     }
 
     void initNoExit(CorrectionPeople crp) {
-        String url = "http://localhost:9008/noexit/bb/save";
         BBInfo info = new BBInfo();
         info.setDxbh(crp.getDxbh());
         info.setXm(crp.getXm());
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(url, info, BBInfo.class);
+        exitService.saveBBInfo(info);
 
-        url = "http://localhost:9008/noexit/info/save";
         Exit exit = new Exit();
         exit.setDxbh(crp.getDxbh());
         exit.setXm(crp.getXm());
-        restTemplate.postForObject(url, exit, Exit.class);
+        exitService.saveExitInfo(exit);
     }
 
     void initCategory(CorrectionPeople crp) {
-        String url = "http://localhost:9009/cate/save";
         CrpCategory cate = new CrpCategory(crp.getDxbh(),
                 crp.getXm(), "01");
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(url, cate, CrpCategory.class);
+        cateService.saveCategory(cate);
     }
 
     void initAssessmentScore(CorrectionPeople crp) {
-        String url = "http://localhost:9011/score/init";
         ScoreInfo scoreInfo = new ScoreInfo(crp.getDxbh(),
                 crp.getXm(), 10);
-        RestTemplate restTemplate = new RestTemplate();
-        restTemplate.postForObject(url, scoreInfo, ScoreInfo.class);
+        assessmentService.saveScore(scoreInfo);
     }
 
     @PostMapping("/register")
@@ -129,7 +132,7 @@ public class CrpController {
             initAssessmentScore(crp);
             // todo 创建未报到信息
             CrpCheck check = new CrpCheck(crp.getDxbh(),
-                    crp.getXm(), formatter.format(new Date()), false);
+                    crp.getXm(), formatter.format(new Date()), "0");
             checkService.save(check);
 
             return ResponseResult.success(true);
@@ -142,11 +145,11 @@ public class CrpController {
     public ResponseResult<Boolean> firstCheck(@RequestBody String dxbh) {
         try {
             checkService.update().eq("dxbh", dxbh)
-                        .set("status", 1)
-                        .update();
+                    .set("status", "1")
+                    .update();
             return ResponseResult.success(true);
         } catch (Exception e) {
-            return ResponseResult.fail(false, "首次报道失败！");
+            return ResponseResult.fail(false, "首次报到失败！");
         }
     }
 
@@ -154,7 +157,7 @@ public class CrpController {
     public ResponseResult<Boolean> update(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                   .update(crp);
+                    .update(crp);
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "更新失败！");
@@ -165,8 +168,8 @@ public class CrpController {
     public ResponseResult<Boolean> recv(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                   .set("status", "在矫")
-                   .update();
+                    .set("status", "在矫")
+                    .update();
 
             return ResponseResult.success(true);
         } catch (Exception e) {

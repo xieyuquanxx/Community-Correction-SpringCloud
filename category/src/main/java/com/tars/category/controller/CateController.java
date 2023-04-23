@@ -19,16 +19,16 @@ public class CateController {
     @GetMapping("/all")
     public ResponseResult<List<CategoryInfo>> getAll() {
         List<CategoryInfo> list = service.list().stream()
-                                         .peek(item -> item.setXm(
-                                                 CrpHelper.getXm(
-                                                         item.getDxbh())))
-                                         .toList();
+                .peek(item -> item.setXm(
+                        CrpHelper.getXm(
+                                item.getDxbh())))
+                .toList();
         return ResponseResult.success(list);
     }
 
     public String getGLLB(String dxbh) {
         return service.query().eq("dxbh", dxbh)
-                      .one().getGllb();
+                .one().getGllb();
     }
 
     @GetMapping("/{id}")
@@ -42,6 +42,7 @@ public class CateController {
     @PostMapping("/save")
     public ResponseResult<Boolean> saveCategory(@RequestBody CategoryInfo info) {
         try {
+            System.out.println("save category");
             return ResponseResult.success(service.save(info));
         } catch (Exception e) {
             return ResponseResult.fail(false, "保存失败!");
@@ -53,7 +54,7 @@ public class CateController {
         try {
             return ResponseResult.success(
                     service.update().eq("dxbh", info.getDxbh())
-                           .update(info));
+                            .update(info));
         } catch (Exception e) {
             return ResponseResult.fail(false, "更新失败!");
         }
