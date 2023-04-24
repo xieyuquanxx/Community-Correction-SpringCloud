@@ -5,6 +5,7 @@ import com.tars.ic.entity.*;
 import com.tars.ic.entity.others.BBInfo;
 import com.tars.ic.entity.others.Exit;
 import com.tars.ic.entity.others.ScoreInfo;
+import com.tars.ic.entity.others.ZJInfo;
 import com.tars.ic.service.CrpCheckService;
 import com.tars.ic.service.CrpService;
 import com.tars.ic.service.remote.RemoteAssessmentService;
@@ -39,9 +40,9 @@ public class CrpController {
     @GetMapping("/xm/{dxbh}")
     public String getName(@PathVariable("dxbh") String dxbh) {
         return service.query()
-                .eq("dxbh", dxbh)
-                .select("xm")
-                .one().getXm();
+                      .eq("dxbh", dxbh)
+                      .select("xm")
+                      .one().getXm();
     }
 
     @GetMapping("/random")
@@ -72,9 +73,11 @@ public class CrpController {
     public ResponseResult<List<CrpCheck>> getNoCheckAll() {
         try {
             List<CrpCheck> list = checkService.query()
-                    .eq("status", "0")
-                    .list().stream()
-                    .peek(e -> e.setXm(getName(e.getDxbh()))).toList();
+                                              .eq("status", "0")
+                                              .list().stream()
+                                              .peek(e -> e.setXm(
+                                                      getName(e.getDxbh())))
+                                              .toList();
             return ResponseResult.success(list);
         } catch (Exception e) {
             return ResponseResult.fail(null, e.getMessage());
@@ -85,7 +88,7 @@ public class CrpController {
     public ResponseResult<CorrectionPeople> getCrp(@PathVariable(
             "id") String id) {
         CorrectionPeople temp = service.query().eq("dxbh", id)
-                .one();
+                                       .one();
         if (temp == null) {
             return ResponseResult.fail(null,
                     "没有找到对象编号为" + id + "的矫正对象");
@@ -97,13 +100,23 @@ public class CrpController {
     void initNoExit(CorrectionPeople crp) {
         BBInfo info = new BBInfo();
         info.setDxbh(crp.getDxbh());
-        info.setXm(crp.getXm());
+        info.setStep(0);
         exitService.saveBBInfo(info);
+
 
         Exit exit = new Exit();
         exit.setDxbh(crp.getDxbh());
         exit.setXm(crp.getXm());
+        exit.setBb("0");
+        exit.setZj("06");
+        exit.setBk("0");
         exitService.saveExitInfo(exit);
+
+        ZJInfo zjInfo = new ZJInfo();
+        zjInfo.setDxbh(crp.getDxbh());
+        zjInfo.setStep(0);
+        zjInfo.setZj("06");
+        exitService.saveZJInfo(zjInfo);
     }
 
     void initCategory(CorrectionPeople crp) {
@@ -145,8 +158,8 @@ public class CrpController {
     public ResponseResult<Boolean> firstCheck(@RequestBody String dxbh) {
         try {
             checkService.update().eq("dxbh", dxbh)
-                    .set("status", "1")
-                    .update();
+                        .set("status", "1")
+                        .update();
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "首次报到失败！");
@@ -157,7 +170,7 @@ public class CrpController {
     public ResponseResult<Boolean> update(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                    .update(crp);
+                   .update(crp);
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "更新失败！");
@@ -168,8 +181,8 @@ public class CrpController {
     public ResponseResult<Boolean> recv(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                    .set("status", "在矫")
-                    .update();
+                   .set("status", "在矫")
+                   .update();
 
             return ResponseResult.success(true);
         } catch (Exception e) {

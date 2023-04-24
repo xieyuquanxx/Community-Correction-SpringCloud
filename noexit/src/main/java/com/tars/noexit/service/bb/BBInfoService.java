@@ -1,4 +1,4 @@
-package com.tars.noexit.service;
+package com.tars.noexit.service.bb;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;

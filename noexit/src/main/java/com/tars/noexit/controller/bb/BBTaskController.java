@@ -1,8 +1,7 @@
-package com.tars.noexit.controller;
+package com.tars.noexit.controller.bb;
 
-import com.tars.noexit.api.ResponseResult;
 import com.tars.noexit.entity.BBInfo;
-import com.tars.noexit.service.BBTaskService;
+import com.tars.noexit.service.bb.BBTaskService;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
@@ -11,14 +10,11 @@ import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @RestController
-@RequestMapping("/noexit/bb/task")
 @CrossOrigin(origins = "*")
 public class BBTaskController {
     @Autowired
@@ -31,7 +27,6 @@ public class BBTaskController {
     private HistoryService historyService;
 
     // 开始一个流程，进入 社区矫正机构填写表单环节
-    @PostMapping("/process")
     public String startProcessInstance() {
         ProcessInstance processInstance = myService.startProcess();
         return processInstance.getId();

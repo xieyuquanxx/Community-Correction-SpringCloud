@@ -4,28 +4,32 @@ import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
 
-@Service
-public class BBTaskService {
-    @Autowired
-    private RuntimeService runtimeService;
+public class MyTaskService {
+    private final TaskService taskService;
+    private final RuntimeService runtimeService;
+    private String processKey;
 
-    @Autowired
-    private TaskService taskService;
+    public MyTaskService(TaskService taskService,
+                         RuntimeService runtimeService
+    ) {
+        this.taskService = taskService;
+        this.runtimeService = runtimeService;
+    }
 
-    // 启动调查评估流程
+    public void setProcessKey(String key) {
+        processKey = key;
+    }
+
     @Transactional
     public ProcessInstance startProcess() {
         return runtimeService
-                .startProcessInstanceByKey("BBProcess");
+                .startProcessInstanceByKey(processKey);
     }
-
 
     // 获得办理人为assignee的所有代办信息
     @Transactional
@@ -66,5 +70,4 @@ public class BBTaskService {
     public void complete(String taskId) {
         taskService.complete(taskId);
     }
-
 }

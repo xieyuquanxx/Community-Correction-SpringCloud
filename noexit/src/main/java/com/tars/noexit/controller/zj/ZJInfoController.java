@@ -1,33 +1,41 @@
-package com.tars.noexit.controller;
+package com.tars.noexit.controller.zj;
 
 import com.tars.noexit.api.ResponseResult;
-import com.tars.noexit.entity.BBInfo;
-import com.tars.noexit.service.BBInfoService;
-import com.tars.noexit.utils.CrpHelper;
+import com.tars.noexit.controller.ExitController;
+import com.tars.noexit.entity.ZJInfo;
+import com.tars.noexit.service.remote.RemoteCrpService;
+import com.tars.noexit.service.zj.ZJInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/noexit/bb")
+@RequestMapping("/noexit/zj")
 @CrossOrigin(origins = "*")
-public class BBInfoController {
+public class ZJInfoController {
     @Autowired
-    private BBInfoService service;
+    private ZJInfoService service;
     @Autowired
-    private BBTaskController taskController;
+    private ZJTaskController taskController;
     @Autowired
     ExitController exitController;
 
+    @Autowired
+    private RemoteCrpService crpService;
+
     @GetMapping("/{id}")
-    public ResponseResult<BBInfo> getBBInfoById(@PathVariable String id) {
-        BBInfo info = service.query().eq("dxbh", id).one();
-        info.setXm(CrpHelper.getXm(id));
-        return ResponseResult.success(info);
+    public ResponseResult<ZJInfo> getBBInfoById(@PathVariable String id) {
+        try {
+            ZJInfo info = service.query().eq("dxbh", id).one();
+            info.setXm(crpService.getName(id));
+            return ResponseResult.success(info);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
     }
 
     // 接收入矫时自动保存
     @PostMapping("/save")
-    public ResponseResult<Boolean> saveBBInfo(@RequestBody BBInfo info) {
+    public ResponseResult<Boolean> saveInfo(@RequestBody ZJInfo info) {
         try {
             return ResponseResult.success(service.save(info));
         } catch (Exception e) {
@@ -36,7 +44,7 @@ public class BBInfoController {
     }
 
     @PostMapping("/update")
-    public ResponseResult<Boolean> updateBBInfo(@RequestBody BBInfo info) {
+    public ResponseResult<Boolean> updateInfo(@RequestBody ZJInfo info) {
         try {
             String processId = taskController.startProcessInstance();
             info.setProcessId(processId);
@@ -53,16 +61,15 @@ public class BBInfoController {
     }
 
     @PostMapping("/task/accept")
-    public ResponseResult<Boolean> accept(@RequestBody BBInfo info) {
+    public ResponseResult<Boolean> accept(@RequestBody ZJInfo info) {
         try {
-
             info = service.query().eq("dxbh", info.getDxbh()).one();
             System.out.println(info);
             // 向公安系统发送内容
             info = taskController.gonganAccept(info);
             service.update().eq("dxbh", info.getDxbh())
                    .update(info);
-            exitController.setBB(info);
+            exitController.setZj(info);
 
             return ResponseResult.success(true);
         } catch (Exception e) {

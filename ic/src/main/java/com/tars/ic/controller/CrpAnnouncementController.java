@@ -46,6 +46,7 @@ public class CrpAnnouncementController {
     @PostMapping("/update")
     public ResponseResult<Boolean> update(@RequestBody CorrectionAnnouncement crp) {
         try {
+            System.out.println(crp);
             service.update().eq("dxbh", crp.getDxbh()).update(crp);
             return ResponseResult.success(true);
         } catch (Exception e) {

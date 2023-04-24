@@ -3,6 +3,7 @@ package com.tars.noexit.controller;
 import com.tars.noexit.api.ResponseResult;
 import com.tars.noexit.entity.BBInfo;
 import com.tars.noexit.entity.Exit;
+import com.tars.noexit.entity.ZJInfo;
 import com.tars.noexit.service.ExitService;
 import com.tars.noexit.utils.CrpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,14 @@ public class ExitController {
     public void setBB(BBInfo info) {
         Exit exit = service.query().eq("dxbh", info.getDxbh()).one();
         exit.setBb("1");
+        service.update()
+               .eq("dxbh", info.getDxbh())
+               .update(exit);
+    }
+
+    public void setZj(ZJInfo info) {
+        Exit exit = service.query().eq("dxbh", info.getDxbh()).one();
+        exit.setZj(info.getZj());
         service.update()
                .eq("dxbh", info.getDxbh())
                .update(exit);
