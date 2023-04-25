@@ -1,12 +1,14 @@
 package com.tars.business.entity.Ban;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
 @TableName("bus_ban_info_tbl")
 public class BanInfo {
+    @TableId
     private String dxbh;
     @TableField(exist = false)
     private String xm;

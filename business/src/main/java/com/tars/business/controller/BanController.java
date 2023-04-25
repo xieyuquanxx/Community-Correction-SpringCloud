@@ -3,6 +3,7 @@ package com.tars.business.controller;
 import com.tars.business.api.ResponseResult;
 import com.tars.business.entity.Ban.BanInfo;
 import com.tars.business.service.ban.BanInfoService;
+import com.tars.business.service.remote.RemoteCrpService;
 import com.tars.business.utils.CrpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,20 +19,22 @@ public class BanController {
 
     @Autowired
     private BanTaskController taskController;
+    @Autowired
+    private RemoteCrpService crpService;
 
     public BanInfo getBanInfoByDXBH(String dxbh) {
         return service.query()
-                      .eq("dxbh", dxbh)
-                      .one();
+                .eq("dxbh", dxbh)
+                .one();
     }
 
     @GetMapping("/all")
     public ResponseResult<List<BanInfo>> getAllBans() {
         List<BanInfo> list = service.list().stream()
-                                    .peek(e -> e.setXm(
-                                            CrpHelper.getXm(
-                                                    e.getDxbh())))
-                                    .toList();
+                .peek(e -> e.setXm(
+                        crpService.getName(
+                                e.getDxbh())))
+                .toList();
         return ResponseResult.success(list);
     }
 
@@ -39,7 +42,7 @@ public class BanController {
     public ResponseResult<Boolean> saveBanInfo(@RequestBody BanInfo ban) {
         try {
             BanInfo info = service.query().eq("dxbh", ban.getDxbh())
-                                  .one();
+                    .one();
             if (info == null) {
                 // 新建一个审批流程
                 ban.setProcessId(
@@ -48,8 +51,8 @@ public class BanController {
             } else {
                 System.out.println(ban);
                 service.update()
-                       .eq("dxbh", ban.getDxbh())
-                       .update(ban);
+                        .eq("dxbh", ban.getDxbh())
+                        .update(ban);
             }
             return ResponseResult.success(true);
         } catch (Exception e) {

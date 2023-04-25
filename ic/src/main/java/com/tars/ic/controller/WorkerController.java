@@ -21,21 +21,21 @@ public class WorkerController {
         return ResponseResult.success(service.list());
     }
 
-    public void modifyTeam(List<String> workers, String teamId) {
+    public void modifyTeam(List<String> workers, Integer teamId) {
         System.out.println(workers);
         List<String> oldWorkers = service.query()
-                                   .eq("team", teamId)
-                                   .select("rybm")
-                                   .list()
-                                   .stream()
-                                   .map(Worker::getRybm).filter(s -> !workers.contains(s))
-                                   .toList();
+                .eq("team", teamId)
+                .select("rybm")
+                .list()
+                .stream()
+                .map(Worker::getRybm).filter(s -> !workers.contains(s))
+                .toList();
         System.out.println(oldWorkers);
-        if(oldWorkers.size() > 0) {
+        if (oldWorkers.size() > 0) {
             service.update()
-                   .in("rybm", oldWorkers)
-                   .set("team", 0)
-                   .update();
+                    .in("rybm", oldWorkers)
+                    .set("team", 0)
+                    .update();
         }
         service.update()
                 .in("rybm", workers)
@@ -44,7 +44,7 @@ public class WorkerController {
     }
 
     @GetMapping("/t1")
-    public List<Worker> getWorkerByTeam(@RequestParam String team) {
+    public List<Worker> getWorkerByTeam(@RequestParam Integer team) {
         return service.query().eq("team", team).select("rybm")
                 .list();
     }

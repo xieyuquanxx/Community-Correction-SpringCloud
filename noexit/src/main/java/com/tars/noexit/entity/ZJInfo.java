@@ -1,6 +1,7 @@
 package com.tars.noexit.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import lombok.Data;
 @Data
 @TableName("exit_zj_tbl")
 public class ZJInfo {
+    @TableId
     private String dxbh;
     @TableField(exist = false)
     private String xm;

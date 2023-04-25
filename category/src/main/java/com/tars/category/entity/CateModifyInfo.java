@@ -1,11 +1,13 @@
 package com.tars.category.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
 @TableName("cate_modify_info_tbl")
 public class CateModifyInfo {
+    @TableId
     private String dxbh;
     private String gllb; // 变更后的类型
     private String tzyy; // 调整原因

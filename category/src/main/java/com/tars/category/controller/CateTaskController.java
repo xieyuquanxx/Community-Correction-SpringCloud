@@ -28,7 +28,6 @@ public class CateTaskController {
     private HistoryService historyService;
 
     // 开始一个流程，进入 司法所填写审批表
-    @PostMapping("/process")
     public String startProcessInstance() {
         ProcessInstance processInstance = myService.startProcess();
         return processInstance.getId();

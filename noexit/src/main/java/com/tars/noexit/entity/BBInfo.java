@@ -1,6 +1,7 @@
 package com.tars.noexit.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -10,16 +11,19 @@ import lombok.Data;
 @Data
 @TableName("exit_bb_tbl")
 public class BBInfo {
+    @TableId
     private String dxbh;
+
     @TableField(exist = false)
     private String xm;
+
     private String crjzjzl;
     private String crjzjhm;
     private String bbsldw;
     private String bbdw;
-    private String bbrq = "2000/1/1";
-    private String bbksrq = "2000/1/1";
-    private String bbjsrq = "2000/1/1";
+    private String bbrq;
+    private String bbksrq;
+    private String bbjsrq;
     private Integer step = 0;
     private String processId;
 }

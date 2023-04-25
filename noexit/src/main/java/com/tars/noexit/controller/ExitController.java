@@ -5,6 +5,7 @@ import com.tars.noexit.entity.BBInfo;
 import com.tars.noexit.entity.Exit;
 import com.tars.noexit.entity.ZJInfo;
 import com.tars.noexit.service.ExitService;
+import com.tars.noexit.service.remote.RemoteCrpService;
 import com.tars.noexit.utils.CrpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,16 @@ public class ExitController {
     @Autowired
     private ExitService service;
 
+    @Autowired
+    private RemoteCrpService crpService;
+
     @GetMapping("/all")
     public ResponseResult<List<Exit>> getAllInfos() {
         List<Exit> list = service.list()
-                                 .stream()
-                                 .peek(e -> e.setXm(CrpHelper.getXm(
-                                         e.getDxbh())))
-                                 .toList();
+                .stream()
+                .peek(e -> e.setXm(crpService.getName(
+                        e.getDxbh())))
+                .toList();
         return ResponseResult.success(list);
     }
 
@@ -43,16 +47,16 @@ public class ExitController {
         Exit exit = service.query().eq("dxbh", info.getDxbh()).one();
         exit.setBb("1");
         service.update()
-               .eq("dxbh", info.getDxbh())
-               .update(exit);
+                .eq("dxbh", info.getDxbh())
+                .update(exit);
     }
 
     public void setZj(ZJInfo info) {
         Exit exit = service.query().eq("dxbh", info.getDxbh()).one();
         exit.setZj(info.getZj());
         service.update()
-               .eq("dxbh", info.getDxbh())
-               .update(exit);
+                .eq("dxbh", info.getDxbh())
+                .update(exit);
     }
 
     @GetMapping("/{id}")

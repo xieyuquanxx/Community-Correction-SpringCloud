@@ -2,6 +2,7 @@ package com.tars.business.controller;
 
 import com.tars.business.api.ResponseResult;
 import com.tars.business.entity.Visitor.VisitorInfo;
+import com.tars.business.service.remote.RemoteCrpService;
 import com.tars.business.service.visitor.VisitorInfoService;
 import com.tars.business.utils.CrpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,22 @@ public class VisitorController {
 
     @Autowired
     private VisitorTaskController taskController;
+    @Autowired
+    private RemoteCrpService crpService;
 
     public VisitorInfo getVisitorInfoByDXBH(String dxbh) {
         return service.query()
-                      .eq("dxbh", dxbh)
-                      .one();
+                .eq("dxbh", dxbh)
+                .one();
     }
 
     @GetMapping("/all")
     public ResponseResult<List<VisitorInfo>> getAllBans() {
         List<VisitorInfo> list = service.list().stream()
-                                        .peek(e -> e.setXm(
-                                                CrpHelper.getXm(
-                                                        e.getDxbh())))
-                                        .toList();
+                .peek(e -> e.setXm(
+                        crpService.getName(
+                                e.getDxbh())))
+                .toList();
         return ResponseResult.success(list);
     }
 
@@ -39,8 +42,8 @@ public class VisitorController {
     public ResponseResult<Boolean> saveVisitorInfo(@RequestBody VisitorInfo ban) {
         try {
             VisitorInfo info = service.query()
-                                      .eq("dxbh", ban.getDxbh())
-                                      .one();
+                    .eq("dxbh", ban.getDxbh())
+                    .one();
             if (info == null) {
                 // 新建一个审批流程
                 ban.setProcessId(
@@ -49,8 +52,8 @@ public class VisitorController {
             } else {
                 System.out.println(ban);
                 service.update()
-                       .eq("dxbh", ban.getDxbh())
-                       .update(ban);
+                        .eq("dxbh", ban.getDxbh())
+                        .update(ban);
             }
             return ResponseResult.success(true);
         } catch (Exception e) {

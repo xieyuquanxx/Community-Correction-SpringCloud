@@ -2,10 +2,14 @@ package com.tars.ic.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @TableName("crp_check_tbl")
+@Builder
+@AllArgsConstructor
 public class CrpCheck {
     private String dxbh;
     @TableField(exist = false)
@@ -14,13 +18,5 @@ public class CrpCheck {
     private String status;
 
     public CrpCheck() {
-    }
-
-    public CrpCheck(String dxbh, String xm, String date,
-                    String status) {
-        this.dxbh = dxbh;
-        this.xm = xm;
-        this.date = date;
-        this.status = status;
     }
 }

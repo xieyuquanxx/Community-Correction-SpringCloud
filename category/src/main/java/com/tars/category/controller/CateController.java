@@ -3,7 +3,7 @@ package com.tars.category.controller;
 import com.tars.category.api.ResponseResult;
 import com.tars.category.entity.CategoryInfo;
 import com.tars.category.service.CateService;
-import com.tars.category.utils.CrpHelper;
+import com.tars.category.service.remote.RemoteCrpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +15,14 @@ import java.util.List;
 public class CateController {
     @Autowired
     private CateService service;
+    @Autowired
+    private RemoteCrpService crpService;
 
     @GetMapping("/all")
     public ResponseResult<List<CategoryInfo>> getAll() {
         List<CategoryInfo> list = service.list().stream()
                 .peek(item -> item.setXm(
-                        CrpHelper.getXm(
+                        crpService.getName(
                                 item.getDxbh())))
                 .toList();
         return ResponseResult.success(list);
@@ -33,16 +35,20 @@ public class CateController {
 
     @GetMapping("/{id}")
     public ResponseResult<CategoryInfo> getCategoryBtId(@PathVariable String id) {
-        CategoryInfo info = service.query().eq("dxbh", id).one();
-        info.setXm(CrpHelper.getXm(id));
-        return ResponseResult.success(info);
+        try {
+            CategoryInfo info = service.query().eq("dxbh", id).one();
+            info.setXm(crpService.getName(id));
+            return ResponseResult.success(info);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
+
     }
 
 
     @PostMapping("/save")
     public ResponseResult<Boolean> saveCategory(@RequestBody CategoryInfo info) {
         try {
-            System.out.println("save category");
             return ResponseResult.success(service.save(info));
         } catch (Exception e) {
             return ResponseResult.fail(false, "保存失败!");

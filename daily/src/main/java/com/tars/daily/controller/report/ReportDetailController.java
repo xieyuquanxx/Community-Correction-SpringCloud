@@ -1,6 +1,7 @@
 package com.tars.daily.controller.report;
 
 import com.tars.daily.api.ResponseResult;
+import com.tars.daily.entity.check.CheckDetail;
 import com.tars.daily.entity.report.ReportDetail;
 import com.tars.daily.service.report.ReportDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,8 @@ public class ReportDetailController {
 
     @GetMapping("/{dxbh}")
     public ResponseResult<List<ReportDetail>> getReportDetailByDxbh(@PathVariable("dxbh") String dxbh) {
-        return ResponseResult.success(service.query().eq("dxbh", dxbh)
-                                             .list());
+        List<ReportDetail> list = service.query().eq("dxbh", dxbh).list();
+        return ResponseResult.success(list);
     }
 
     @PostMapping

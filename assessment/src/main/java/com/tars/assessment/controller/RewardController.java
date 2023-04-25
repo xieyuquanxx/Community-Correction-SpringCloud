@@ -5,6 +5,7 @@ import com.tars.assessment.entity.RewardInfo;
 import com.tars.assessment.entity.RewardLgInfo;
 import com.tars.assessment.entity.RewardPraiseInfo;
 import com.tars.assessment.service.RewardInfoService;
+import com.tars.assessment.service.remote.RemoteCrpService;
 import com.tars.assessment.utils.CrpHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,14 +22,16 @@ public class RewardController {
     private RewardPraiseController praiseController;
     @Autowired
     private RewardLgController lgController;
+    @Autowired
+    private RemoteCrpService crpService;
 
     @GetMapping("/all")
     public ResponseResult<List<RewardInfo>> getAllRewards() {
         List<RewardInfo> list = infoService.list().stream()
-                                           .peek(e -> e.setXm(
-                                                   CrpHelper.getXm(
-                                                           e.getDxbh())))
-                                           .toList();
+                .peek(e -> e.setXm(
+                        crpService.getName(
+                                e.getDxbh())))
+                .toList();
         return ResponseResult.success(list);
     }
 
@@ -54,7 +57,7 @@ public class RewardController {
                     lgInfo.setStep(0);
                     // 开启一个进程
                     lgInfo = lgController.saveLgReward(lgInfo)
-                                         .getData();
+                            .getData();
                     info.setRewardId(lgInfo.getId());
                     break;
                 case "03": // 重大立功

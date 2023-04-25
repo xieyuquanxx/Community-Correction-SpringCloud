@@ -25,11 +25,14 @@ public class CrtController {
     @PostMapping("/save")
     public ResponseResult<Boolean> save(@RequestBody CorrectionTeam info) {
         try {
-            CorrectionTeamTemp temp = new CorrectionTeamTemp(
-                    info.getId(),
-                    info.getTeamName(), info.getMonitor(),
-                    info.getTeamNumber());
+            CorrectionTeamTemp temp = CorrectionTeamTemp.builder()
+                    .id(info.getId())
+                    .teamName(info.getTeamName())
+                    .monitor(info.getMonitor())
+                    .teamNumber(info.getTeamNumber()).build();
+
             System.out.println(service.save(temp));
+
             workerController.modifyTeam(info.getWorkers(),
                     info.getId());
             return ResponseResult.success(true);
@@ -42,12 +45,14 @@ public class CrtController {
     public ResponseResult<Boolean> update(@RequestBody CorrectionTeam crp) {
         try {
             System.out.println(crp);
-            CorrectionTeamTemp temp = new CorrectionTeamTemp(
-                    crp.getId(),
-                    crp.getTeamName(), crp.getMonitor(),
-                    crp.getWorkers().size());
+            CorrectionTeamTemp temp = CorrectionTeamTemp.builder()
+                    .id(crp.getId())
+                    .teamName(crp.getTeamName())
+                    .monitor(crp.getMonitor())
+                    .teamNumber(crp.getWorkers().size()).build();
+
             service.update().eq("id", crp.getId()).update(temp);
-            System.out.println("111");
+
             workerController.modifyTeam(crp.getWorkers(),
                     crp.getId());
 
@@ -63,10 +68,10 @@ public class CrtController {
         List<CorrectionTeam> team = new ArrayList<>();
         for (CorrectionTeamTemp t : tempList) {
             List<String> workers = workerController.getWorkerByTeam(
-                                                           t.getId())
-                                                   .stream().map(
+                            t.getId())
+                    .stream().map(
                             Worker::getRybm)
-                                                   .toList();
+                    .toList();
             CorrectionTeam c = new CorrectionTeam(t);
             c.getWorkers().addAll(workers);
             team.add(c);

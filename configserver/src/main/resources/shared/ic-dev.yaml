@@ -8,6 +8,10 @@ spring:
     username: root
     password: xyq123456
 
+logging:
+  level:
+    root: debug
+
 # 配置mybatis
 #mybatis:
 #  mapper-locations: classpath:mybatis/mapper/*.xml

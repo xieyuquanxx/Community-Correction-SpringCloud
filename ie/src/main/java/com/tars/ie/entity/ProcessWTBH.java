@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@TableName("process_wtbh_tbl")
+@TableName("ie_process_wtbh_tbl")
 public class ProcessWTBH {
     private String processId;
     private String wtbh;
