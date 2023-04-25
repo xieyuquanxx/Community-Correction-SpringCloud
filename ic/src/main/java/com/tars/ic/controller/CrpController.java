@@ -1,7 +1,11 @@
 package com.tars.ic.controller;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.PutObjectRequest;
+import com.aliyun.oss.model.PutObjectResult;
 import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.*;
+import com.tars.ic.entity.oss.OssPolicyResult;
 import com.tars.ic.entity.others.BBInfo;
 import com.tars.ic.entity.others.Exit;
 import com.tars.ic.entity.others.ScoreInfo;
@@ -11,16 +15,18 @@ import com.tars.ic.service.CrpService;
 import com.tars.ic.service.remote.RemoteAssessmentService;
 import com.tars.ic.service.remote.RemoteCateService;
 import com.tars.ic.service.remote.RemoteNoExitService;
+import com.tars.ic.service.remote.RemoteOssService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/ic/crp")
@@ -40,8 +46,12 @@ public class CrpController {
     private RemoteNoExitService exitService;
     @Autowired
     private FileController fileController;
+    @Autowired
+    private OssController ossController;
+    @Autowired
+    private RemoteOssService ossService;
 
-    private static SimpleDateFormat formatter = new SimpleDateFormat(
+    private static final SimpleDateFormat formatter = new SimpleDateFormat(
             "yyyy-MM-dd");
 
     @GetMapping("/xm/{dxbh}")
@@ -58,12 +68,32 @@ public class CrpController {
         return list.get(i).getDxbh();
     }
 
+    @Autowired
+    private OSSClient ossClient;
 
     @PostMapping("/upload")
-    public ResponseResult<String> uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest req) {
+    public ResponseResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String url = fileController.httpUpload(file, req)
-                    .getData();
+            OssPolicyResult policy = ossController.policy().getData();
+//            log.info("policy: " + policy.toString());
+//            Map<String, String> formFields = new LinkedHashMap<String, String>();
+//            formFields.put("OSSAccessKeyId", policy.getAccessKeyId());
+//            formFields.put("policy", policy.getPolicy());
+//            formFields.put("signature", policy.getSignature());
+//            formFields.put("key", policy.getDir() + "${filename}");
+//            formFields.put("success_action_status", "200");
+//            formFields.put("file", file.getBytes());
+//            ossService.upload(params);
+
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest("ccorr-bucket",
+                            policy.getDir() + "/" + file.getOriginalFilename(),
+                            new ByteArrayInputStream(file.getBytes()));
+
+            ossClient.putObject(putObjectRequest);
+//            log.warn(String.valueOf(result.getResponse().getStatusCode()));
+            String url = "https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/" +
+                    policy.getDir() + "/" + file.getOriginalFilename();
             return ResponseResult.success(url);
         } catch (Exception e) {
             return ResponseResult.fail("", e.getMessage());
