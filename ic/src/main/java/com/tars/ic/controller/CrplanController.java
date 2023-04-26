@@ -4,14 +4,17 @@ import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.CorrectionPeople;
 import com.tars.ic.entity.CorrectionPlan;
 import com.tars.ic.service.CrplanService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/ic/plan")
 @CrossOrigin(origins = "*")
+@Slf4j
 public class CrplanController {
     @Autowired
     private CrplanService service;
@@ -23,18 +26,30 @@ public class CrplanController {
         return ResponseResult.success(service.count());
     }
 
+    @PostMapping("/upload")
+    public ResponseResult<String> uploadPlan(@RequestParam("file") MultipartFile file) {
+        return crpController.uploadFile(file);
+    }
+
     @GetMapping("/all")
     public ResponseResult<List<CorrectionPlan>> getAll() {
-        List<CorrectionPlan> list = service.list();
-        for (CorrectionPlan item : list) {
-            System.out.println(item);
-            CorrectionPeople crp =
-                    crpController.getCrp(
-                            item.getDxbh()).getData();
-            item.setXm(crp.getXm());
-            item.setJzlb(crp.getJzlb());
+        try {
+            List<CorrectionPlan> list =
+                    service.list().stream()
+                           .peek(e -> {
+                               CorrectionPeople crp =
+                                       crpController.getCrp(
+                                                            e.getDxbh())
+                                                    .getData();
+                               e.setXm(crp.getXm());
+                               e.setJzlb(
+                                       crp.getJzlb());
+                           }).toList();
+            System.out.println(list.size());
+            return ResponseResult.success(list);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
         }
-        return ResponseResult.success(list);
     }
 
     @GetMapping("/{id}")

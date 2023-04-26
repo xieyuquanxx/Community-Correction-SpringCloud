@@ -1,4 +1,4 @@
-package com.tars.ic.entity;
+package com.tars.ic.entity.others;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@TableName("crp_cate_tbl")
 @Builder
 @AllArgsConstructor
 public class CrpCategory {
@@ -17,7 +16,4 @@ public class CrpCategory {
     @TableField(exist = false)
     private String xm; // 姓名
     private String gllb; // 管理类别
-
-    public CrpCategory() {
-    }
 }

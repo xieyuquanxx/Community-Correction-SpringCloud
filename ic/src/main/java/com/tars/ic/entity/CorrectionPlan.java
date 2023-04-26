@@ -9,7 +9,6 @@ import lombok.Data;
 
 @Data
 @TableName("crplan_tbl")
-@Builder
 public class CorrectionPlan {
     @TableId(type = IdType.AUTO)
     private Integer id;// 方案id
@@ -29,8 +28,6 @@ public class CorrectionPlan {
     private String jyjzcs; // 教育矫正措施
     private String bkfzcs; // 帮困扶助措施
     private String qtcs; // 其他措施
-    private String ssjgid; // 所属机构id
-    private String ssxgpg; // 实施效果评估
-    private String pgsj; //评估时间
-    private String pgr; // 评估人
+
+    private String plan; // 方案docx的url
 }

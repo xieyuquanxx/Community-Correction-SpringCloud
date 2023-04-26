@@ -4,10 +4,7 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.*;
-import com.tars.ic.entity.others.BBInfo;
-import com.tars.ic.entity.others.Exit;
-import com.tars.ic.entity.others.ScoreInfo;
-import com.tars.ic.entity.others.ZJInfo;
+import com.tars.ic.entity.others.*;
 import com.tars.ic.oss.entity.OssPolicyResult;
 import com.tars.ic.service.CrpCheckService;
 import com.tars.ic.service.CrpService;
@@ -67,17 +64,6 @@ public class CrpController {
     public ResponseResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
             OssPolicyResult policy = ossController.policy().getData();
-//            log.info("policy: " + policy.toString());
-//            Map<String, String> formFields = new
-//            LinkedHashMap<String, String>();
-//            formFields.put("OSSAccessKeyId", policy
-//            .getAccessKeyId());
-//            formFields.put("policy", policy.getPolicy());
-//            formFields.put("signature", policy.getSignature());
-//            formFields.put("key", policy.getDir() + "${filename}");
-//            formFields.put("success_action_status", "200");
-//            formFields.put("file", file.getBytes());
-//            ossService.upload(params);
 
             PutObjectRequest putObjectRequest =
                     new PutObjectRequest("ccorr-bucket",
@@ -86,8 +72,7 @@ public class CrpController {
                                     file.getBytes()));
 
             ossClient.putObject(putObjectRequest);
-//            log.warn(String.valueOf(result.getResponse()
-//            .getStatusCode()));
+
             String url = "https://ccorr-bucket.oss-cn-shenzhen" +
                     ".aliyuncs.com/" +
                     policy.getDir() + "/" + file.getOriginalFilename();
