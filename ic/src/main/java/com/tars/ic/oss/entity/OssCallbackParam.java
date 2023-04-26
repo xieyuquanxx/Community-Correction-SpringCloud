@@ -1,4 +1,4 @@
-package com.tars.ic.entity.oss;
+package com.tars.ic.oss.entity;
 
 import lombok.Data;
 

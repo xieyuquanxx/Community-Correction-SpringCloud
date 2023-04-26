@@ -1,13 +1,20 @@
 package com.tars.ie.controller;
 
+import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.PutObjectRequest;
 import com.tars.ie.api.ResponseResult;
 import com.tars.ie.entity.IEInfo;
 import com.tars.ie.entity.SuggestInfo;
+import com.tars.ie.oss.OssController;
+import com.tars.ie.oss.entity.OssPolicyResult;
 import com.tars.ie.service.IEInfoService;
 import com.tars.ie.service.SuggestInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RestController
@@ -17,6 +24,34 @@ public class SuggestInfoController {
 
     @Autowired
     private SuggestInfoService service;
+
+    @Autowired
+    private OSSClient ossClient;
+    @Autowired
+    private OssController ossController;
+
+    @Value("${aliyun.oss.bucketName}")
+    private String bucketName;
+
+    @PostMapping("/upload")
+    public ResponseResult<String> uploadDocx(@RequestParam("file") MultipartFile file) {
+        try {
+            OssPolicyResult policy = ossController.policy().getData();
+            PutObjectRequest putObjectRequest =
+                    new PutObjectRequest(bucketName,
+                            policy.getDir() + "/" + file.getOriginalFilename(),
+                            new ByteArrayInputStream(
+                                    file.getBytes()));
+
+            ossClient.putObject(putObjectRequest);
+            String url = "https://ccorr-bucket.oss-cn-shenzhen" +
+                    ".aliyuncs.com/" +
+                    policy.getDir() + "/" + file.getOriginalFilename();
+            return ResponseResult.success(url);
+        } catch (Exception e) {
+            return ResponseResult.fail("", e.getMessage());
+        }
+    }
 
 
     public void initSuggestInfo(String wtbh) {

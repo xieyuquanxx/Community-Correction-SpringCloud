@@ -1,14 +1,13 @@
-package com.tars.ic.service.impl;
+package com.tars.ic.oss.service;
 
 import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
-import com.tars.ic.entity.oss.OssCallbackParam;
-import com.tars.ic.entity.oss.OssCallbackResult;
-import com.tars.ic.entity.oss.OssPolicyResult;
-import com.tars.ic.service.oss.OssService;
+import com.tars.ic.oss.entity.OssCallbackParam;
+import com.tars.ic.oss.entity.OssCallbackResult;
+import com.tars.ic.oss.entity.OssPolicyResult;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

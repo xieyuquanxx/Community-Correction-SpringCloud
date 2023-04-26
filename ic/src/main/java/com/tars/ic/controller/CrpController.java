@@ -2,25 +2,20 @@ package com.tars.ic.controller;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.aliyun.oss.model.PutObjectResult;
 import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.*;
-import com.tars.ic.entity.oss.OssPolicyResult;
 import com.tars.ic.entity.others.BBInfo;
 import com.tars.ic.entity.others.Exit;
 import com.tars.ic.entity.others.ScoreInfo;
 import com.tars.ic.entity.others.ZJInfo;
+import com.tars.ic.oss.entity.OssPolicyResult;
 import com.tars.ic.service.CrpCheckService;
 import com.tars.ic.service.CrpService;
 import com.tars.ic.service.remote.RemoteAssessmentService;
 import com.tars.ic.service.remote.RemoteCateService;
 import com.tars.ic.service.remote.RemoteNoExitService;
-import com.tars.ic.service.remote.RemoteOssService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,14 +40,11 @@ public class CrpController {
     @Autowired
     private RemoteNoExitService exitService;
     @Autowired
-    private FileController fileController;
-    @Autowired
     private OssController ossController;
-    @Autowired
-    private RemoteOssService ossService;
 
-    private static final SimpleDateFormat formatter = new SimpleDateFormat(
-            "yyyy-MM-dd");
+    private static final SimpleDateFormat formatter =
+            new SimpleDateFormat(
+                    "yyyy-MM-dd");
 
     @GetMapping("/xm/{dxbh}")
     public String getName(@PathVariable("dxbh") String dxbh) {
@@ -76,8 +68,10 @@ public class CrpController {
         try {
             OssPolicyResult policy = ossController.policy().getData();
 //            log.info("policy: " + policy.toString());
-//            Map<String, String> formFields = new LinkedHashMap<String, String>();
-//            formFields.put("OSSAccessKeyId", policy.getAccessKeyId());
+//            Map<String, String> formFields = new
+//            LinkedHashMap<String, String>();
+//            formFields.put("OSSAccessKeyId", policy
+//            .getAccessKeyId());
 //            formFields.put("policy", policy.getPolicy());
 //            formFields.put("signature", policy.getSignature());
 //            formFields.put("key", policy.getDir() + "${filename}");
@@ -88,11 +82,14 @@ public class CrpController {
             PutObjectRequest putObjectRequest =
                     new PutObjectRequest("ccorr-bucket",
                             policy.getDir() + "/" + file.getOriginalFilename(),
-                            new ByteArrayInputStream(file.getBytes()));
+                            new ByteArrayInputStream(
+                                    file.getBytes()));
 
             ossClient.putObject(putObjectRequest);
-//            log.warn(String.valueOf(result.getResponse().getStatusCode()));
-            String url = "https://ccorr-bucket.oss-cn-shenzhen.aliyuncs.com/" +
+//            log.warn(String.valueOf(result.getResponse()
+//            .getStatusCode()));
+            String url = "https://ccorr-bucket.oss-cn-shenzhen" +
+                    ".aliyuncs.com/" +
                     policy.getDir() + "/" + file.getOriginalFilename();
             return ResponseResult.success(url);
         } catch (Exception e) {
@@ -115,11 +112,11 @@ public class CrpController {
     public ResponseResult<List<CrpCheck>> getNoCheckAll() {
         try {
             List<CrpCheck> list = checkService.query()
-                    .eq("status", "0")
-                    .list().stream()
-                    .peek(e -> e.setXm(
-                            getName(e.getDxbh())))
-                    .toList();
+                                              .eq("status", "0")
+                                              .list().stream()
+                                              .peek(e -> e.setXm(
+                                                      getName(e.getDxbh())))
+                                              .toList();
             return ResponseResult.success(list);
         } catch (Exception e) {
             return ResponseResult.fail(null, e.getMessage());
@@ -130,7 +127,7 @@ public class CrpController {
     public ResponseResult<CorrectionPeople> getCrp(@PathVariable(
             "id") String id) {
         CorrectionPeople temp = service.query().eq("dxbh", id)
-                .one();
+                                       .one();
         if (temp == null) {
             return ResponseResult.fail(null,
                     "没有找到对象编号为" + id + "的矫正对象");
@@ -200,8 +197,8 @@ public class CrpController {
     public ResponseResult<Boolean> firstCheck(@RequestBody String dxbh) {
         try {
             checkService.update().eq("dxbh", dxbh)
-                    .set("status", "1")
-                    .update();
+                        .set("status", "1")
+                        .update();
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "首次报到失败！");
@@ -212,7 +209,7 @@ public class CrpController {
     public ResponseResult<Boolean> update(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                    .update(crp);
+                   .update(crp);
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "更新失败！");
@@ -223,8 +220,8 @@ public class CrpController {
     public ResponseResult<Boolean> recv(@RequestBody CorrectionPeople crp) {
         try {
             service.update().eq("dxbh", crp.getDxbh())
-                    .set("status", "在矫")
-                    .update();
+                   .set("status", "在矫")
+                   .update();
 
             return ResponseResult.success(true);
         } catch (Exception e) {

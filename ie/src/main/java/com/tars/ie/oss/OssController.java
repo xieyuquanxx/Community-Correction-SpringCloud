@@ -1,18 +1,14 @@
-package com.tars.ic.controller;
+package com.tars.ie.oss;
 
-import com.tars.ic.api.ResponseResult;
-import com.tars.ic.oss.entity.OssCallbackResult;
-import com.tars.ic.oss.entity.OssPolicyResult;
-import com.tars.ic.oss.service.OssServiceImpl;
+import com.tars.ie.api.ResponseResult;
+import com.tars.ie.oss.entity.OssCallbackResult;
+import com.tars.ie.oss.entity.OssPolicyResult;
+import com.tars.ie.oss.service.OssServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*")
-@Slf4j
-@RequestMapping("/aliyun/oss")
 public class OssController {
     @Autowired
     private OssServiceImpl ossService;

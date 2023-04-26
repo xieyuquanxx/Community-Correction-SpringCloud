@@ -1,7 +1,6 @@
-package com.tars.ic.service.oss;
-
-import com.tars.ic.entity.oss.OssCallbackResult;
-import com.tars.ic.entity.oss.OssPolicyResult;
+package com.tars.ic.oss.service;
+import com.tars.ic.oss.entity.OssCallbackResult;
+import com.tars.ic.oss.entity.OssPolicyResult;
 import jakarta.servlet.http.HttpServletRequest;
 
 public interface OssService {
