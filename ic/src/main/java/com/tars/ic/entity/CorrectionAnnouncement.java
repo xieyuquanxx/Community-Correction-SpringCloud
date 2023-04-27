@@ -8,12 +8,12 @@ import lombok.Data;
 
 @Data
 @TableName("crp_announcement_tbl")
-@Builder
 public class CorrectionAnnouncement {
     @TableId
     private String dxbh;
     @TableField(exist = false)
     private String xm;
+
     private String xgrq;
     private String audio;
     private Boolean finish;

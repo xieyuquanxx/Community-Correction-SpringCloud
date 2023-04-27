@@ -1,6 +1,7 @@
 package com.tars.ic.controller;
 
 import com.aliyun.oss.OSSClient;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.*;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -57,25 +59,14 @@ public class CrpController {
         return list.get(i).getDxbh();
     }
 
-    @Autowired
-    private OSSClient ossClient;
 
     @PostMapping("/upload")
-    public ResponseResult<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseResult<String> uploadFile(@RequestParam("file") MultipartFile file
+    ) {
         try {
-            OssPolicyResult policy = ossController.policy().getData();
-
-            PutObjectRequest putObjectRequest =
-                    new PutObjectRequest("ccorr-bucket",
-                            policy.getDir() + "/" + file.getOriginalFilename(),
-                            new ByteArrayInputStream(
-                                    file.getBytes()));
-
-            ossClient.putObject(putObjectRequest);
-
-            String url = "https://ccorr-bucket.oss-cn-shenzhen" +
-                    ".aliyuncs.com/" +
-                    policy.getDir() + "/" + file.getOriginalFilename();
+            ResponseResult<String> result = ossController.uploadFile(
+                    file, null);
+            String url = result.getData();
             return ResponseResult.success(url);
         } catch (Exception e) {
             return ResponseResult.fail("", e.getMessage());
