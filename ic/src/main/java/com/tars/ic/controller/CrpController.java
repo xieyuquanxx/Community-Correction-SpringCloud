@@ -71,7 +71,6 @@ public class CrpController {
         } catch (Exception e) {
             return ResponseResult.fail("", e.getMessage());
         }
-
     }
 
     @GetMapping("/count")

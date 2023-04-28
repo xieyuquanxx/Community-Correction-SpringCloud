@@ -6,7 +6,6 @@ import com.tars.daily.service.check.CheckDetailService;
 import com.tars.daily.service.remote.RemoteCrpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -21,8 +20,14 @@ public class CheckDetailController {
 
     @GetMapping("/{dxbh}")
     public ResponseResult<List<CheckDetail>> getCheckDetailByDxbh(@PathVariable("dxbh") String dxbh) {
-        List<CheckDetail> list = service.query().eq("dxbh", dxbh).list();
-        return ResponseResult.success(list);
+        try {
+            List<CheckDetail> list = service.query().eq("dxbh", dxbh)
+                                            .list();
+            return ResponseResult.success(list);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
+
     }
 
     // 更新首次报到
@@ -33,6 +38,7 @@ public class CheckDetailController {
     @PostMapping
     public ResponseResult<Boolean> saveCheck(@RequestBody CheckDetail detail) {
         try {
+            System.out.println(detail);
             firstCheck(detail.getDxbh());
             service.save(detail);
             return ResponseResult.success(true);

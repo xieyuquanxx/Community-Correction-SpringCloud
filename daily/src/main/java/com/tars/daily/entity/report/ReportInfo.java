@@ -8,4 +8,5 @@ public class ReportInfo {
     private String xm;
     private String gllb;
     private Integer report_count;
+    private Integer count;
 }

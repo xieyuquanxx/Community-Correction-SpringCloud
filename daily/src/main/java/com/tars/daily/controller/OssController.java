@@ -1,12 +1,12 @@
-package com.tars.ic.controller;
+package com.tars.daily.controller;
 
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
-import com.tars.ic.api.ResponseResult;
-import com.tars.ic.oss.entity.OssCallbackResult;
-import com.tars.ic.oss.entity.OssPolicyResult;
-import com.tars.ic.oss.service.OssServiceImpl;
+import com.tars.daily.api.ResponseResult;
+import com.tars.daily.oss.entity.OssCallbackResult;
+import com.tars.daily.oss.entity.OssPolicyResult;
+import com.tars.daily.oss.service.OssServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ public class OssController {
     @Autowired
     private OSSClient ossClient;
 
-    //@ApiOperation(value = "oss上传签名生成")
     @RequestMapping(value = "/policy", method = RequestMethod.GET)
     @ResponseBody
     public ResponseResult<OssPolicyResult> policy() {

@@ -8,4 +8,5 @@ public class CheckInfo {
     private String xm;
     private String gllb;
     private Integer check_count;
+    private Integer count; // 当前打卡了几次
 }

@@ -20,6 +20,16 @@ public class ReportInfoController {
 
     @GetMapping("/all")
     public ResponseResult<List<ReportInfo>> getAll() {
-        return ResponseResult.success(mapper.getAllReportInfo());
+        try {
+            List<ReportInfo> allCheckInfo = mapper.getAllReportInfo()
+                                                  .stream()
+                                                  .peek(e -> e.setCount(
+                                                          mapper.getCheckCount(
+                                                                  e.getDxbh())))
+                                                  .toList();
+            return ResponseResult.success(allCheckInfo);
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
     }
 }
