@@ -19,7 +19,7 @@ aliyun:
     maxSize: 10 # 上传文件大小(M)
     callback: http://localhost:9007/aliyun/oss/callback # 文件上传成功后的回调地址
     dir:
-      prefix: ccorr/docxs/ # 上传文件夹路径前缀
+      prefix: ccorr/ie/ # 上传文件夹路径前缀
 
 
 eureka:

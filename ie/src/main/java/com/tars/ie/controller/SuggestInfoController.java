@@ -1,52 +1,35 @@
 package com.tars.ie.controller;
 
-import com.aliyun.oss.OSSClient;
-import com.aliyun.oss.model.PutObjectRequest;
 import com.tars.ie.api.ResponseResult;
-import com.tars.ie.entity.IEInfo;
 import com.tars.ie.entity.SuggestInfo;
 import com.tars.ie.oss.OssController;
-import com.tars.ie.oss.entity.OssPolicyResult;
-import com.tars.ie.service.IEInfoService;
 import com.tars.ie.service.SuggestInfoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @RestController
 @RequestMapping("/ie/suggest")
 @CrossOrigin(origins = "*")
+@Tag(name = "SuggestInfoController", description = "调查评估意见接口类")
 public class SuggestInfoController {
 
     @Autowired
     private SuggestInfoService service;
-
-    @Autowired
-    private OSSClient ossClient;
     @Autowired
     private OssController ossController;
 
-    @Value("${aliyun.oss.bucketName}")
-    private String bucketName;
 
     @PostMapping("/upload")
     public ResponseResult<String> uploadDocx(@RequestParam("file") MultipartFile file) {
         try {
-            OssPolicyResult policy = ossController.policy().getData();
-            PutObjectRequest putObjectRequest =
-                    new PutObjectRequest(bucketName,
-                            policy.getDir() + "/" + file.getOriginalFilename(),
-                            new ByteArrayInputStream(
-                                    file.getBytes()));
+            ResponseResult<String> res = ossController.uploadFile(
+                    file, null);
 
-            ossClient.putObject(putObjectRequest);
-            String url = "https://ccorr-bucket.oss-cn-shenzhen" +
-                    ".aliyuncs.com/" +
-                    policy.getDir() + "/" + file.getOriginalFilename();
+            String url = res.getData();
             return ResponseResult.success(url);
         } catch (Exception e) {
             return ResponseResult.fail("", e.getMessage());
@@ -60,21 +43,26 @@ public class SuggestInfoController {
         save(info);
     }
 
-    @GetMapping("/test")
-    public String helloIE() {
-        return "Hello IE";
-    }
-
 
     @GetMapping("/count")
     public ResponseResult<Long> getCount() {
-        return ResponseResult.success(service.count());
+        try {
+            return ResponseResult.success(service.count());
+        } catch (Exception e) {
+            return ResponseResult.fail(-1L, e.getMessage());
+        }
+
     }
 
     @GetMapping("/all")
     public ResponseResult<List<SuggestInfo>> getAll() {
-        return ResponseResult.success(
-                service.query().notIn("finish", -1).list());
+        try {
+            return ResponseResult.success(
+                    service.query().notIn("finish", -1).list());
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
+
     }
 
     @GetMapping("/{wtbh}")
@@ -115,7 +103,8 @@ public class SuggestInfoController {
     @DeleteMapping("/delete")
     public ResponseResult<Boolean> delete(@RequestBody SuggestInfo info) {
         try {
-            return ResponseResult.success(service.removeById(info)
+            return ResponseResult.success(
+                    service.removeById(info)
             );
         } catch (Exception e) {
             return ResponseResult.fail(true, "删除失败！");

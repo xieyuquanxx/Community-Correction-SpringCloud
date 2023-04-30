@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/task2")
 public class MyTaskController {
 
     @Autowired
@@ -42,7 +41,6 @@ public class MyTaskController {
      * @param wtbh
      * @return
      */
-    @PostMapping("/process")
     public String startProcessInstance(@RequestParam("wtbh") String wtbh) {
         //启动流程
         HashMap<String, Object> map = new HashMap<>();
@@ -50,24 +48,25 @@ public class MyTaskController {
 
         ProcessInstance processInstance = myService.startProcess(map);
         StringBuilder sb = new StringBuilder();
-        sb.append("创建调查评估流程 processId：").append(processInstance.getId())
-                .append("\n");
+        sb.append("创建调查评估流程 processId：")
+          .append(processInstance.getId())
+          .append("\n");
         return sb.toString();
     }
 
     // 代办列表查询
-    @GetMapping(value = "/tasks", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<TaskRepresentation> getTasks(@RequestParam String assignee) {
         List<Task> tasks = myService.getTasks(assignee);
         List<TaskRepresentation> dtos = new ArrayList<>();
         for (Task task : tasks) {
-            dtos.add(new TaskRepresentation(task.getId(), task.getName()));
+            dtos.add(new TaskRepresentation(task.getId(),
+                    task.getName()));
         }
         return dtos;
     }
 
-    @GetMapping(value = "/apply")
-    public String apply(@RequestParam("taskId") String taskId, String result) {
+    public String apply(@RequestParam("taskId") String taskId,
+                        String result) {
         Task task = myService.getTaskById(taskId);
         if (task == null) {
             throw new RuntimeException("调查流程不存在");
@@ -79,12 +78,13 @@ public class MyTaskController {
         return result;
     }
 
-    @GetMapping(value = "/pimg", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getProcessImage(@RequestParam("processId") String processId) throws IOException {
         // 查找历史流程
-        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery()
-                .processInstanceId(processId)
-                .singleResult();
+        HistoricProcessInstance historicProcessInstance =
+                historyService.createHistoricProcessInstanceQuery()
+                                                                        .processInstanceId(
+                                                                                processId)
+                                                                        .singleResult();
 
 
         List<Execution> executions = runtimeService
@@ -95,10 +95,12 @@ public class MyTaskController {
         List<String> activityIds = new ArrayList<>();
         List<String> flows = new ArrayList<>();
         for (Execution exe : executions) {
-            List<String> ids = runtimeService.getActiveActivityIds(exe.getId());
+            List<String> ids = runtimeService.getActiveActivityIds(
+                    exe.getId());
             activityIds.addAll(ids);
         }
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(historicProcessInstance.getProcessDefinitionId());
+        BpmnModel bpmnModel = repositoryService.getBpmnModel(
+                historicProcessInstance.getProcessDefinitionId());
         ProcessEngineConfiguration engconf =
                 processEngine.getProcessEngineConfiguration();
         ProcessDiagramGenerator diagramGenerator = engconf
@@ -106,7 +108,8 @@ public class MyTaskController {
         InputStream in = diagramGenerator.generateDiagram(
                 bpmnModel, "png",
                 activityIds, flows, engconf.getActivityFontName(),
-                engconf.getLabelFontName(), engconf.getAnnotationFontName(),
+                engconf.getLabelFontName(),
+                engconf.getAnnotationFontName(),
                 engconf.getClassLoader(), 1.0, true);
         byte[] bytes = new byte[in.available()];
         in.read(bytes, 0, in.available());

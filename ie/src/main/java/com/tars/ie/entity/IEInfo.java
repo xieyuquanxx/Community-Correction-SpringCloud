@@ -3,6 +3,7 @@ package com.tars.ie.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 
@@ -13,6 +14,7 @@ import lombok.Data;
 
 @Data
 @TableName("ie_tbl")
+@Schema(name = "IEInfo", description = "调查评估信息类")
 public class IEInfo {
     @TableId
     String wtbh; // 委托编号

@@ -1,38 +1,26 @@
 package com.tars.ie.controller;
 
 import com.tars.ie.api.ResponseResult;
-import com.tars.ie.entity.IEInfo;
 import com.tars.ie.entity.ProcessWTBH;
 import com.tars.ie.service.IETaskService;
 import com.tars.ie.service.ProcessWTBHService;
-import com.tars.ie.utils.GenerateIEInfo;
 import lombok.Data;
-import org.flowable.engine.HistoryService;
-import org.flowable.engine.ProcessEngine;
-import org.flowable.engine.RepositoryService;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class IETaskController {
     @Autowired
     private ProcessWTBHService processWTBHService;
     @Autowired
     private IETaskService myService;
-    @Autowired
-    private RepositoryService repositoryService;
-    @Autowired
-    private ProcessEngine processEngine;
-    @Autowired
-    private HistoryService historyService;
 
 
     // 开始一个调查评估流程，进入 委托方节点
@@ -41,7 +29,8 @@ public class IETaskController {
         return processInstance.getProcessInstanceId();
     }
 
-    public void complete(String processId, HashMap<String, Object> map) {
+    public void complete(String processId,
+                         HashMap<String, Object> map) {
         Task task = myService.getTasksByProcessId(
                 processId).get(0);
         myService.complete(task.getId(), map);
@@ -49,8 +38,8 @@ public class IETaskController {
 
     ProcessWTBH getProcessWTBHByProcessId(String id) {
         ProcessWTBH res = processWTBHService.query()
-                .eq("processId", id)
-                .one();
+                                            .eq("processId", id)
+                                            .one();
         if (res == null) {
             res = new ProcessWTBH(id, "");
         }
@@ -63,13 +52,13 @@ public class IETaskController {
         List<Task> tasks = myService.getTasks(assignee);
         List<TaskRepresentation> dtos =
                 tasks.stream().map(
-                                (task) -> new TaskRepresentation(task.getId(),
-                                        task.getProcessInstanceId(),
-                                        task.getName(),
-                                        task.getAssignee(),
-                                        getProcessWTBHByProcessId(
-                                                task.getProcessInstanceId()).getWtbh()))
-                        .toList();
+                             (task) -> new TaskRepresentation(task.getId(),
+                                     task.getProcessInstanceId(),
+                                     task.getName(),
+                                     task.getAssignee(),
+                                     getProcessWTBHByProcessId(
+                                             task.getProcessInstanceId()).getWtbh()))
+                     .toList();
         return ResponseResult.success(dtos);
     }
 

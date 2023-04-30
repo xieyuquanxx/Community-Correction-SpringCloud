@@ -6,6 +6,9 @@ import com.tars.ie.entity.ProcessWTBH;
 import com.tars.ie.service.IEInfoService;
 import com.tars.ie.service.ProcessWTBHService;
 import com.tars.ie.utils.GenerateIEInfo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +18,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/ie")
 @CrossOrigin(origins = "*")
+@Tag(name = "IEInfoController", description = "调查评估信息接口类")
 public class IEInfoController {
-
     @Autowired
     private IEInfoService service;
     @Autowired
@@ -26,32 +29,45 @@ public class IEInfoController {
     @Autowired
     private ProcessWTBHService processWTBHService;
 
-    @GetMapping("/test")
-    public String hello() {
-        System.out.println("Hello World!");
-        return "Hello World!";
-    }
-
-    public void saveGenerateInfo(IEInfo info) {
-        save(info);
-    }
-
-    @GetMapping("/count")
-    public ResponseResult<Long> getCount() {
-        return ResponseResult.success(service.count());
-    }
 
     /**
-     * 只选择已经进入社区矫正机构环节的调查评估
+     * 保存调查评估信息类
      *
-     * @return
+     * @param info 调查评估信息类
      */
-    @GetMapping("/all")
-    public ResponseResult<List<IEInfo>> getAll() {
-        return ResponseResult.success(
-                service.query().notIn("finish", -1).list());
+    public void saveGenerateInfo(IEInfo info) {
+        try {
+            save(info);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
+    @Operation(summary = "获取调查评估信息的个数")
+    @GetMapping("/count")
+    public ResponseResult<Long> getCount() {
+        try {
+            long count = service.count();
+            return ResponseResult.success(count);
+        } catch (Exception e) {
+            return ResponseResult.fail(-1L, e.getMessage());
+        }
+    }
+
+
+    @Operation(summary = "获取所有的调查评估信息")
+    @GetMapping("/all")
+    public ResponseResult<List<IEInfo>> getAll() {
+        try {
+            return ResponseResult.success(
+                    service.query().notIn("finish", -1).list());
+        } catch (Exception e) {
+            return ResponseResult.fail(null, e.getMessage());
+        }
+    }
+
+    @Operation(summary = "根据委托编号获取调查评估信息", parameters =
+            {@Parameter(name = "wtbh", description = "委托编号")})
     @GetMapping("/{wtbh}")
     public ResponseResult<IEInfo> getIEInfo(@PathVariable("wtbh") String wtbh) {
         IEInfo temp = service.query().eq("wtbh", wtbh).one();
@@ -63,7 +79,7 @@ public class IEInfoController {
         }
     }
 
-
+    @Operation(summary = "保存调查评估信息")
     @PostMapping("/save")
     public ResponseResult<Boolean> save(@RequestBody IEInfo info) {
         try {
@@ -72,10 +88,12 @@ public class IEInfoController {
             suggestInfoController.initSuggestInfo(info.getWtbh());
             return ResponseResult.success(true);
         } catch (Exception e) {
-            return ResponseResult.fail(false, "调查评估 编号 重复!");
+            return ResponseResult.fail(false,
+                    "调查评估 编号 重复!" + e.getMessage());
         }
     }
 
+    @Operation(summary = "结束一个调查评估流程")
     @PostMapping("/finish")
     public ResponseResult<Boolean> finish(@RequestBody IEInfo info) {
         try {
@@ -92,7 +110,7 @@ public class IEInfoController {
         }
     }
 
-
+    @Operation(summary = "更新调查评估信息")
     @PostMapping("/update")
     public ResponseResult<Boolean> update(@RequestBody IEInfo info) {
         try {
@@ -103,6 +121,7 @@ public class IEInfoController {
         }
     }
 
+    @Operation(summary = "更新调查评估所需要的时间")
     @PostMapping("/update/time")
     public ResponseResult<Boolean> updateTime(@RequestBody IEInfo info) {
         try {
@@ -125,6 +144,7 @@ public class IEInfoController {
         }
     }
 
+    @Operation(summary = "删除一个调查评估信息")
     @DeleteMapping("/delete")
     public ResponseResult<Boolean> delete(@RequestBody IEInfo info) {
         try {
@@ -139,6 +159,7 @@ public class IEInfoController {
     /**
      * 流程审批api
      */
+    @Operation(summary = "模拟：开启一个调查评估流程")
     @GetMapping("/task/start")
     public ResponseResult<Boolean> startProcess() {
         // 随机生成委托函信息
@@ -155,6 +176,7 @@ public class IEInfoController {
         return ResponseResult.success();
     }
 
+    @Operation(summary = "获取所有未被接收的调查评估信息")
     @GetMapping("/task/all")
     public ResponseResult<List<IEInfo>> getAllDcpg() {
         return ResponseResult.success(service.query().in("finish", -1)
@@ -162,6 +184,7 @@ public class IEInfoController {
                                              .list());
     }
 
+    @Operation(summary = "接收一个调查评估流程")
     @PostMapping("/task/recv")
     public ResponseResult<Boolean> recvWTF() {
         List<ProcessWTBH> list = processWTBHService.query().list();
@@ -178,19 +201,16 @@ public class IEInfoController {
         return ResponseResult.success();
     }
 
+    @Operation(summary = "系统接收一个调查评估信息")
     @PostMapping("/task/accept")
     public ResponseResult<Boolean> accept(@RequestBody IEInfo info) {
-//        String processId = info.getProcessId();
-//        HashMap<String, Object> map = new HashMap<>();
-//        String res = "1";
-//        map.put("checkResult", res);
-//        taskController.complete(processId, map);
         info.setFinish(10);
         info.setStep(info.getStep() + 1);
         update(info);
         return ResponseResult.success();
     }
 
+    @Operation(summary = "系统退回一个调查评估信息")
     @PostMapping("/task/unaccepted")
     public ResponseResult<Boolean> unaccepted(@RequestBody IEInfo info) {
         String processId = info.getProcessId();

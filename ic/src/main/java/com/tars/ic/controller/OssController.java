@@ -17,9 +17,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
-@CrossOrigin(origins = "*")
-@Slf4j
-@RequestMapping("/aliyun/oss")
 public class OssController {
     @Autowired
     private OssServiceImpl ossService;
