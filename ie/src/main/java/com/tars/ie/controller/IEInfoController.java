@@ -27,6 +27,12 @@ public class IEInfoController {
     @Autowired
     private ProcessWTBHService processWTBHService;
 
+    @GetMapping("/test")
+    public String hello() {
+        System.out.println("Hello World!");
+        return "Hello World!";
+    }
+
     public void saveGenerateInfo(IEInfo info) {
         save(info);
     }
@@ -79,8 +85,8 @@ public class IEInfoController {
             map.put("checkResult", res);
             taskController.complete(info.getProcessId(), map);
             service.update().
-                    eq("wtbh", info.getWtbh())
-                    .set("finish", 0).update();
+                   eq("wtbh", info.getWtbh())
+                   .set("finish", 0).update();
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "调查评估 完成失败!");
@@ -102,7 +108,7 @@ public class IEInfoController {
     public ResponseResult<Boolean> updateTime(@RequestBody IEInfo info) {
         try {
             service.update().eq("wtbh", info.getWtbh())
-                    .set("finish", info.getFinish()).update();
+                   .set("finish", info.getFinish()).update();
             return ResponseResult.success(true);
         } catch (Exception e) {
             return ResponseResult.fail(false, "更新失败！");
@@ -114,7 +120,7 @@ public class IEInfoController {
                           String wth) {
         try {
             service.update().eq("wtbh", wtbh)
-                    .set("wtdch", wth).update();
+                   .set("wtdch", wth).update();
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -153,8 +159,8 @@ public class IEInfoController {
     @GetMapping("/task/all")
     public ResponseResult<List<IEInfo>> getAllDcpg() {
         return ResponseResult.success(service.query().in("finish", -1)
-                .eq("step", 1)
-                .list());
+                                             .eq("step", 1)
+                                             .list());
     }
 
     @PostMapping("/task/recv")

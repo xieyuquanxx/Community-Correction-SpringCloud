@@ -1,10 +1,10 @@
-package com.tars.ccorrection;
+package com.tars.zuulserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CcorrectionApplicationTests {
+class GatewayApplicationTests {
 
     @Test
     void contextLoads() {
