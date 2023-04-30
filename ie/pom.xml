@@ -11,11 +11,12 @@
     <artifactId>ie</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ie</name>
-    <description>ie</description>
+    <description>调查评估模块</description>
     <properties>
         <java.version>17</java.version>
     </properties>
     <dependencies>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

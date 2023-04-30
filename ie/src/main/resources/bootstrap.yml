@@ -8,7 +8,6 @@ spring:
       uri: http://localhost:9000
       failFast: true
 
-
 aliyun:
   oss:
     endpoint: oss-cn-shenzhen.aliyuncs.com # oss对外服务的访问域名
