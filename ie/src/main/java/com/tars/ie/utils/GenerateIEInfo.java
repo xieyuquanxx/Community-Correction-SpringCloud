@@ -24,7 +24,7 @@ public class GenerateIEInfo {
         Random random = new Random();
         int randomName = random.nextInt(names.length());
         int randomLength = random.nextInt(3);
-        if (randomLength == 1) randomLength++;
+        if (randomLength == 0) randomLength++;
         StringBuilder name = new StringBuilder(
                 String.valueOf(names.charAt(randomName)));
         for (int i = 0; i < randomLength; i++) {

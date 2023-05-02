@@ -29,7 +29,7 @@
 
     <groupId>com.tars</groupId>
     <artifactId>ccorrection</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>ccorrection</name>
     <description>ccorrection</description>
     <packaging>pom</packaging>

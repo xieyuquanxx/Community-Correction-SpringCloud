@@ -14,19 +14,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/ic/announce")
 @CrossOrigin(origins = "*")
-public class CrpAnnouncementController {
+public class CrpAnnounceController {
     @Autowired
     private AnnounceService service;
     @Autowired
     private CrpController crpController;
+    @Autowired
+    private OssController ossController;
 
     @GetMapping("/count")
     public ResponseResult<Long> getCount() {
         return ResponseResult.success(service.count());
     }
 
-    @Autowired
-    private OssController ossController;
 
     @PostMapping("/upload")
     public ResponseResult<String> uploadAudio(@RequestParam("file") MultipartFile file) {
@@ -68,7 +68,6 @@ public class CrpAnnouncementController {
     @PostMapping("/update")
     public ResponseResult<Boolean> update(@RequestBody CorrectionAnnouncement crp) {
         try {
-            System.out.println(crp);
             service.update().eq("dxbh", crp.getDxbh()).update(crp);
             return ResponseResult.success(true);
         } catch (Exception e) {
