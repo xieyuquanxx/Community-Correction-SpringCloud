@@ -3,6 +3,7 @@ package com.tars.ic.controller;
 import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.CorrectionPeople;
 import com.tars.ic.entity.CrpCheck;
+import com.tars.ic.entity.data.NumberData;
 import com.tars.ic.entity.others.*;
 import com.tars.ic.remote.RemoteOssService;
 import com.tars.ic.service.CrpCheckService;
@@ -10,6 +11,7 @@ import com.tars.ic.service.CrpService;
 import com.tars.ic.remote.RemoteAssessmentService;
 import com.tars.ic.remote.RemoteCateService;
 import com.tars.ic.remote.RemoteNoExitService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
+
 
 @RestController
 @RequestMapping("/ic/crp")
@@ -79,6 +82,16 @@ public class CrpController {
     } catch (Exception e) {
       return ResponseResult.fail(-1L, e.getMessage());
     }
+  }
+
+  @GetMapping("/counts")
+  public ResponseResult<NumberData> getStatic() {
+    NumberData numberData = NumberData.builder()
+        .total(service.count())
+        .received(service.query().eq("status", JZStatus.IN.description).count())
+        .build();
+    numberData.setUnreceived(numberData.getTotal() - numberData.getReceived());
+    return ResponseResult.success(numberData);
   }
 
   @GetMapping("/all")
@@ -164,7 +177,7 @@ public class CrpController {
   @PostMapping("/register")
   public ResponseResult<Boolean> register(@RequestBody CorrectionPeople crp) {
     try {
-      crp.setStatus("待入矫");
+      crp.setStatus(JZStatus.NOT.description);
       crp.setSfdcpg("0");
       service.save(crp);
       // 还需要在 不准出境 模块生成出入境信息
@@ -224,12 +237,24 @@ public class CrpController {
   public ResponseResult<Boolean> recv(@RequestBody CorrectionPeople crp) {
     try {
       service.update().eq("dxbh", crp.getDxbh())
-          .set("status", "在矫")
+          .set("status", JZStatus.IN.description)
           .update();
 
       return ResponseResult.success(true);
     } catch (Exception e) {
       return ResponseResult.fail(false, "更新失败！");
+    }
+  }
+
+  @Getter
+  enum JZStatus {
+    NOT("待入矫"), IN("在矫");
+
+
+    private final String description;
+
+    JZStatus(String description) {
+      this.description = description;
     }
   }
 }
