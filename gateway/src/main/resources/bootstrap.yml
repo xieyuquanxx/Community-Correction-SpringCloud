@@ -8,6 +8,7 @@ service-url:
   business-service: http://localhost:9012
   termination-service: http://localhost:9013
   uncorrected-service: http://localhost:9014
+  oss-service: http://localhost:9098
 
 
 spring:
@@ -57,6 +58,10 @@ spring:
           uri: ${service-url.uncorrected-service}/uncorrected/**
           predicates:
             - Path=/uncorrected/**
+        - id: oss_service
+          uri: ${service-url.oss-service}/oss/**
+          predicates:
+            - Path=/oss/**
 
 
 eureka:

@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: oss
+  profiles:
+    active: dev
+  cloud:
+    config: # config-server的地址
+      uri: http://localhost:9000
+      failFast: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+  http:
+    encoding:
+      multipart:
+        enabled: true
+        max-file-size: 50MB
+        max-request-size: 50MB
+
+server:
+  tomcat:
+    uri-encoding: UTF-8
+
+
+aliyun:
+  oss:
+    endpoint: oss-cn-shenzhen.aliyuncs.com # oss对外服务的访问域名
+    accessKeyId: LTAI5t61NfmYppGVLarhRP6n    # 访问身份验证中用到用户标识
+    accessKeySecret: oAqlgyMVrc80ui9feoSuzRKZiRAAor # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
+    bucketName: ccorr-bucket # oss的存储空间
+    policy:
+      expire: 300 # 签名有效期(S)
+    maxSize: 50 # 上传文件大小(M)
+    callback: http://localhost:9007/aliyun/oss/callback # 文件上传成功后的回调地址
+    dir:
+      prefix: ccorr/ # 上传文件夹路径前缀
+
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://localhost:9001/eureka/

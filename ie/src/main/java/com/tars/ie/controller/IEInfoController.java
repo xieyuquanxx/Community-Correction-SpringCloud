@@ -227,6 +227,7 @@ public class IEInfoController {
         .sfzhm(info.getBgrsfzh())
         .xb(info.getBgrxb())
         .status("待入矫")
+        .csrq("1999-1-1")
         .build();
     crpService.register(crp);
     return ResponseResult.success(true);

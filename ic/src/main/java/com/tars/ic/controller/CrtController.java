@@ -40,6 +40,7 @@ public class CrtController {
               .build();
 
       service.save(temp);
+      info.setId(temp.getId());
 
       workerController.modifyTeam(info.getWorkers(),
           info.getId());
@@ -52,7 +53,6 @@ public class CrtController {
   @PostMapping("/update")
   public ResponseResult<Boolean> update(@RequestBody CorrectionTeam crp) {
     try {
-      System.out.println(crp);
       CorrectionTeamTemp temp =
           CorrectionTeamTemp.builder()
               .id(crp.getId())

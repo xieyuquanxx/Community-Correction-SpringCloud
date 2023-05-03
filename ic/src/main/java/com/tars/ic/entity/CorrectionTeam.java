@@ -1,8 +1,5 @@
 package com.tars.ic.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,21 +11,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class CorrectionTeam {
-    Integer id; // 小组id
-    String teamName; // 小组名
-    String monitor; // 小组队长
-    Integer teamNumber; // 小组成员个数
-    List<String> workers; // 小组成员
 
-    public CorrectionTeam() {
-        workers = new ArrayList<>();
-    }
+  Integer id; // 小组id
+  String teamName; // 小组名
+  String monitor; // 小组队长
+  Integer teamNumber; // 小组成员个数
+  List<String> workers; // 小组成员
 
-    public CorrectionTeam(CorrectionTeamTemp temp) {
-        workers = new ArrayList<>();
-        id = temp.id;
-        teamName = temp.teamName;
-        monitor = temp.monitor;
-        teamNumber = temp.teamNumber;
-    }
+  public CorrectionTeam(CorrectionTeamTemp temp) {
+    workers = new ArrayList<>();
+    id = temp.id;
+    teamName = temp.teamName;
+    monitor = temp.monitor;
+    teamNumber = temp.teamNumber;
+  }
 }

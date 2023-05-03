@@ -4,11 +4,12 @@ import com.tars.ic.api.ResponseResult;
 import com.tars.ic.entity.CorrectionPeople;
 import com.tars.ic.entity.CrpCheck;
 import com.tars.ic.entity.others.*;
+import com.tars.ic.remote.RemoteOssService;
 import com.tars.ic.service.CrpCheckService;
 import com.tars.ic.service.CrpService;
-import com.tars.ic.service.remote.RemoteAssessmentService;
-import com.tars.ic.service.remote.RemoteCateService;
-import com.tars.ic.service.remote.RemoteNoExitService;
+import com.tars.ic.remote.RemoteAssessmentService;
+import com.tars.ic.remote.RemoteCateService;
+import com.tars.ic.remote.RemoteNoExitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +38,7 @@ public class CrpController {
   @Autowired
   private RemoteNoExitService exitService;
   @Autowired
-  private OssController ossController;
+  private RemoteOssService ossService;
 
   private static final SimpleDateFormat formatter =
       new SimpleDateFormat(
@@ -63,7 +64,7 @@ public class CrpController {
   ) {
     try {
       ResponseResult<String> result =
-          ossController.uploadFile(file, null);
+          ossService.upload(file);
       String url = result.getData();
       return ResponseResult.success(url);
     } catch (Exception e) {
