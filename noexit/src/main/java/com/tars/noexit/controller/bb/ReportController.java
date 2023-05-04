@@ -91,4 +91,21 @@ public class ReportController {
       return ResponseResult.fail(false, "更新失败!");
     }
   }
+
+  @PostMapping("/task/refuse")
+  public ResponseResult<Boolean> refuse(@RequestBody ReportInfo info) {
+    try {
+
+      info = service.query().eq("dxbh", info.getDxbh()).one();
+      System.out.println(info);
+      // 向公安系统发送内容
+      info = taskController.refuse(info);
+      service.update().eq("dxbh", info.getDxbh())
+          .update(info);
+
+      return ResponseResult.success(true);
+    } catch (Exception e) {
+      return ResponseResult.fail(false, "更新失败!");
+    }
+  }
 }

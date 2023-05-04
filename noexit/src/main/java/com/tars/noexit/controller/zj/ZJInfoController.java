@@ -2,6 +2,7 @@ package com.tars.noexit.controller.zj;
 
 import com.tars.noexit.api.ResponseResult;
 import com.tars.noexit.controller.ExitController;
+import com.tars.noexit.entity.ReportInfo;
 import com.tars.noexit.entity.ZJInfo;
 import com.tars.noexit.service.remote.RemoteCrpService;
 import com.tars.noexit.service.zj.ZJInfoService;
@@ -84,6 +85,23 @@ public class ZJInfoController {
       service.update().eq("dxbh", info.getDxbh())
           .update(info);
       exitController.setZj(info);
+
+      return ResponseResult.success(true);
+    } catch (Exception e) {
+      return ResponseResult.fail(false, "更新失败!");
+    }
+  }
+
+  @PostMapping("/task/refuse")
+  public ResponseResult<Boolean> refuse(@RequestBody ZJInfo info) {
+    try {
+
+      info = service.query().eq("dxbh", info.getDxbh()).one();
+      System.out.println(info);
+      // 向公安系统发送内容
+      info = taskController.refuse(info);
+      service.update().eq("dxbh", info.getDxbh())
+          .update(info);
 
       return ResponseResult.success(true);
     } catch (Exception e) {

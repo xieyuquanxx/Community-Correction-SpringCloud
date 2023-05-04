@@ -54,4 +54,17 @@ public class ReportTaskController {
     return info;
   }
 
+  // 公安不同意
+  public ReportInfo refuse(ReportInfo info) {
+    info.setStep(info.getStep() - 1);
+    HashMap<String, Object> map = new HashMap<>();
+    int result = 0;
+    map.put("result", result);
+    Task task = myService.getTasksByProcessId(info.getProcessId())
+        .get(0);
+    myService.complete(task.getId(), map);
+    System.out.println("公安拒绝");
+    return info;
+  }
+
 }

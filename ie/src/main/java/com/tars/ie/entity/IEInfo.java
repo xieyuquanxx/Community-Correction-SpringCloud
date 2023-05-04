@@ -41,6 +41,7 @@ public class IEInfo {
 
   String nsyjzlb; // 拟适用矫正类别
   String dcdwxqj; // 接受委托的县级社区矫正机构
+
   @TableLogic
   int isDelete; // 逻辑删除
 }
