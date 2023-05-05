@@ -14,88 +14,92 @@ import java.util.List;
 @RestController
 @RequestMapping("/ic/plan")
 @CrossOrigin(origins = "*")
-@Slf4j
 public class CrplanController {
-    @Autowired
-    private CrplanService service;
-    @Autowired
-    private CrpController crpController;
 
-    @GetMapping("/count")
-    public ResponseResult<Long> getCount() {
-        return ResponseResult.success(service.count());
+  @Autowired
+  private CrplanService service;
+  @Autowired
+  private CrpController crpController;
+
+  @GetMapping("/count")
+  public ResponseResult<Long> getCount() {
+    try {
+      return ResponseResult.success(service.count());
+    } catch (Exception e) {
+      return ResponseResult.fail(-1L, e.getMessage());
     }
 
-    @PostMapping("/upload")
-    public ResponseResult<String> uploadPlan(@RequestParam("file") MultipartFile file) {
-        return crpController.uploadFile(file);
-    }
+  }
 
-    @GetMapping("/all")
-    public ResponseResult<List<CorrectionPlan>> getAll() {
-        try {
-            List<CorrectionPlan> list =
-                    service.list().stream()
-                           .peek(e -> {
-                               CorrectionPeople crp =
-                                       crpController.getCrp(
-                                                            e.getDxbh())
-                                                    .getData();
-                               e.setXm(crp.getXm());
-                               e.setJzlb(
-                                       crp.getJzlb());
-                           }).toList();
-            System.out.println(list.size());
-            return ResponseResult.success(list);
-        } catch (Exception e) {
-            return ResponseResult.fail(null, e.getMessage());
-        }
-    }
+  @PostMapping("/upload")
+  public ResponseResult<String> uploadPlan(
+      @RequestParam("file") MultipartFile file) {
+    return crpController.uploadFile(file);
+  }
 
-    @GetMapping("/{id}")
-    public ResponseResult<CorrectionPlan> getPlanById(@PathVariable("id") String id) {
-        CorrectionPlan temp = service.query().eq("id", id).one();
-        if (temp == null) {
-            return ResponseResult.fail(null,
-                    "没有找到方案编号为" + id + "的矫正方案");
-        } else {
-            temp.setXm(crpController.getName(temp.getDxbh()));
-            return ResponseResult.success(temp);
-        }
+  @GetMapping("/all")
+  public ResponseResult<List<CorrectionPlan>> getAll() {
+    try {
+      List<CorrectionPlan> list =
+          service.list().stream()
+              .peek(e -> {
+                CorrectionPeople crp =
+                    crpController.getCrp(
+                            e.getDxbh())
+                        .getData();
+                e.setXm(crp.getXm());
+                e.setJzlb(
+                    crp.getJzlb());
+              }).toList();
+      return ResponseResult.success(list);
+    } catch (Exception e) {
+      return ResponseResult.fail(null, e.getMessage());
     }
+  }
 
-    @GetMapping("/{dxbh}")
-    public ResponseResult<CorrectionPlan> getPlanByDxbh(
-            @PathVariable("dxbh") String dxbh
-    ) {
-        CorrectionPlan temp = service.query().eq("dxbh", dxbh).one();
-        if (temp == null) {
-            return ResponseResult.fail(null,
-                    "没有找到对象编号为" + dxbh + "的矫正方案");
-        } else {
-            temp.setXm(crpController.getName(temp.getDxbh()));
-            return ResponseResult.success(temp);
-        }
+  @GetMapping("/{id}")
+  public ResponseResult<CorrectionPlan> getPlanById(@PathVariable("id") String id) {
+    CorrectionPlan temp = service.query().eq("id", id).one();
+    if (temp == null) {
+      return ResponseResult.fail(null,
+          "没有找到方案编号为" + id + "的矫正方案");
+    } else {
+      temp.setXm(crpController.getName(temp.getDxbh()));
+      return ResponseResult.success(temp);
     }
+  }
 
-    @PostMapping("/save")
-    public ResponseResult<Boolean> save(@RequestBody CorrectionPlan plan) {
-        try {
-            service.save(plan);
-            return ResponseResult.success(true);
-        } catch (Exception e) {
-            return ResponseResult.fail(false, e.getMessage());
-        }
+  @GetMapping("/{dxbh}")
+  public ResponseResult<CorrectionPlan> getPlanByDxbh(
+      @PathVariable("dxbh") String dxbh
+  ) {
+    CorrectionPlan temp = service.query().eq("dxbh", dxbh).one();
+    if (temp == null) {
+      return ResponseResult.fail(null,
+          "没有找到对象编号为" + dxbh + "的矫正方案");
+    } else {
+      temp.setXm(crpController.getName(temp.getDxbh()));
+      return ResponseResult.success(temp);
     }
+  }
 
-    @PostMapping("/update")
-    public ResponseResult<Boolean> update(@RequestBody CorrectionPlan plan) {
-        try {
-            service.update().eq("dxbh", plan.getDxbh())
-                   .update(plan);
-            return ResponseResult.success(true);
-        } catch (Exception e) {
-            return ResponseResult.fail(false, "更新失败！");
-        }
+  @PostMapping("/save")
+  public ResponseResult<Boolean> save(@RequestBody CorrectionPlan plan) {
+    try {
+      return ResponseResult.success(service.save(plan));
+    } catch (Exception e) {
+      return ResponseResult.fail(false, e.getMessage());
     }
+  }
+
+  @PostMapping("/update")
+  public ResponseResult<Boolean> update(@RequestBody CorrectionPlan plan) {
+    try {
+      service.update().eq("dxbh", plan.getDxbh())
+          .update(plan);
+      return ResponseResult.success(true);
+    } catch (Exception e) {
+      return ResponseResult.fail(false, "更新失败！");
+    }
+  }
 }
