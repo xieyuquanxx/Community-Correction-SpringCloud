@@ -1,6 +1,0 @@
-FROM openjdk:17-alpine
-ADD noexit-0.0.1-SNAPSHOT.jar /noexit-0.0.1-SNAPSHOT.jar
-RUN sh -c 'touch /noexit-0.0.1-SNAPSHOT.jar'
-EXPOSE 9008
-ENTRYPOINT ["java", "-jar","/noexit-0.0.1-SNAPSHOT.jar"]
-MAINTAINER xieyuquan

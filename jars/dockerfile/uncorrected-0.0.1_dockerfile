@@ -1,6 +1,0 @@
-FROM openjdk:17-alpine
-ADD uncorrected-0.0.1-SNAPSHOT.jar /uncorrected-0.0.1-SNAPSHOT.jar
-RUN sh -c 'touch /uncorrected-0.0.1-SNAPSHOT.jar'
-EXPOSE 9014
-ENTRYPOINT ["java", "-jar","/uncorrected-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
-MAINTAINER xieyuquan

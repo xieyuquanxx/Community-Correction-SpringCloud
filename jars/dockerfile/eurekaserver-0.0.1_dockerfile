@@ -1,6 +1,0 @@
-FROM openjdk:17-alpine
-ADD eurekaserver-0.0.1-SNAPSHOT.jar /eurekaserver-0.0.1-SNAPSHOT.jar
-RUN sh -c 'touch /eurekaserver-0.0.1-SNAPSHOT.jar'
-EXPOSE 9001
-ENTRYPOINT ["java", "-jar","/eurekaserver-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
-MAINTAINER xieyuquan

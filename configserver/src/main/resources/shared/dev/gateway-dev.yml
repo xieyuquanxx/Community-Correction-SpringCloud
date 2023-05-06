@@ -1,6 +1,7 @@
 server:
   port: 9099
 
+
 service-url:
   ie-service: http://localhost:9006
   ic-service: http://localhost:9007
@@ -14,8 +15,16 @@ service-url:
   oss-service: http://localhost:9098
 
 
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://localhost:9001/eureka/
+
 spring:
   cloud:
+    config: # config-server的地址
+      uri: http://localhost:9000
+      failFast: true
     gateway:
       routes:
         - id: ie_service

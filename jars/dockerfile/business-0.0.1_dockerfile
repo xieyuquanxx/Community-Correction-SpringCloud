@@ -1,6 +1,0 @@
-FROM openjdk:17-alpine
-ADD business-0.0.1-SNAPSHOT.jar /business-0.0.1-SNAPSHOT.jar
-RUN sh -c 'touch /business-0.0.1-SNAPSHOT.jar'
-EXPOSE 9012
-ENTRYPOINT ["java", "-jar","/business-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
-MAINTAINER xieyuquan

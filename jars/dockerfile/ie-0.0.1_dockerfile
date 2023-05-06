@@ -1,6 +1,0 @@
-FROM openjdk:17-alpine
-ADD ie-0.0.1-SNAPSHOT.jar /ie-0.0.1-SNAPSHOT.jar
-RUN sh -c 'touch /ie-0.0.1-SNAPSHOT.jar'
-EXPOSE 9006
-ENTRYPOINT ["java", "-jar","/ie-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
-MAINTAINER xieyuquan
