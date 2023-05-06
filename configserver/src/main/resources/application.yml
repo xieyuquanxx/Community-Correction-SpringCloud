@@ -3,10 +3,18 @@ server:
 spring:
   application:
     name: config-server
+  config:
+    name: config-server
   profiles:
-    active: "dev"
+    active: "prod"
   cloud:
     config:
       server:
         git:
-          uri: https://gitee.com/csuxyq/spring-cloud-config.git/
+          uri: https://gitee.com/csuxyq/spring-cloud-config
+
+
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://eureka-server:9001/eureka/
