@@ -1,0 +1,6 @@
+FROM openjdk:17-alpine
+ADD termination-0.0.1-SNAPSHOT.jar /termination-0.0.1-SNAPSHOT.jar
+RUN sh -c 'touch /termination-0.0.1-SNAPSHOT.jar'
+EXPOSE 9013
+ENTRYPOINT ["java", "-jar","/termination-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+MAINTAINER xieyuquan

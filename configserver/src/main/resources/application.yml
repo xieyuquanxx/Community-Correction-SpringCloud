@@ -2,11 +2,13 @@ server:
   port: 9000
 spring:
   application:
-    name: configserver
+    name: config-server
   profiles:
-    active: native
+    active: "dev"
   cloud:
     config:
       server:
-        native:
-          search-locations: classpath:/shared
+        git:
+          uri: https://github.com/xieyuquanxx/Community-Correction-SpringCloud.git/
+          search-paths: configserver/src/main/resources
+

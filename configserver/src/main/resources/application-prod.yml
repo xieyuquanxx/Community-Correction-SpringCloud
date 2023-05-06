@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/shared/prod
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://172.27.0.2:9001/eureka/

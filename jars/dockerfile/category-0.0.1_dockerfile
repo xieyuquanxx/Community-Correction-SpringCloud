@@ -1,0 +1,6 @@
+FROM openjdk:17-alpine
+ADD category-0.0.1-SNAPSHOT.jar /category-0.0.1-SNAPSHOT.jar
+RUN sh -c 'touch /category-0.0.1-SNAPSHOT.jar'
+EXPOSE 9009
+ENTRYPOINT ["java", "-jar","/category-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+MAINTAINER xieyuquan

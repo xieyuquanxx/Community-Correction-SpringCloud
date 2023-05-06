@@ -1,0 +1,6 @@
+FROM openjdk:17-alpine
+ADD ic-0.0.1-SNAPSHOT.jar /ic-0.0.1-SNAPSHOT.jar
+RUN sh -c 'touch /ic-0.0.1-SNAPSHOT.jar'
+EXPOSE 9007
+ENTRYPOINT ["java", "-jar","/ic-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+MAINTAINER xieyuquan

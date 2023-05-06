@@ -1,0 +1,3 @@
+FROM openjdk:17-alpine
+ADD buildjar.py.jar /buildjar.py.jar
+RUN sh -c 'touch /buildjar.py.jar'

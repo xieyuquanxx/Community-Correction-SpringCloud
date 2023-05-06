@@ -1,0 +1,6 @@
+FROM openjdk:17-alpine
+ADD oss-0.0.1-SNAPSHOT.jar /oss-0.0.1-SNAPSHOT.jar
+RUN sh -c 'touch /oss-0.0.1-SNAPSHOT.jar'
+EXPOSE 9098
+ENTRYPOINT ["java", "-jar","/oss-0.0.1-SNAPSHOT.jar", "--spring.profiles.active=prod"]
+MAINTAINER xieyuquan
