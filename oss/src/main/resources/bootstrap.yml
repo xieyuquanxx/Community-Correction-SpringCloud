@@ -1,12 +1,15 @@
 spring:
-  application:
-    name: oss
-  profiles:
-    active: dev
   cloud:
     config: # config-server的地址
       uri: http://localhost:9000
       failFast: true
+  #      discovery:
+  #        enabled: true
+  #        service-id: config-server
+  application:
+    name: oss
+  profiles:
+    active: dev
   servlet:
     multipart:
       max-file-size: 50MB
@@ -32,11 +35,5 @@ aliyun:
     policy:
       expire: 300 # 签名有效期(S)
     maxSize: 50 # 上传文件大小(M)
-    callback: http://localhost:9007/aliyun/oss/callback # 文件上传成功后的回调地址
     dir:
       prefix: ccorr/ # 上传文件夹路径前缀
-
-eureka:
-  client:
-    serviceUrl: # eureka-server的路径
-      defaultZone: http://localhost:9001/eureka/

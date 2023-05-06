@@ -1,32 +1,24 @@
 package com.tars.oss.service;
 
-import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.common.utils.BinaryUtil;
 import com.aliyun.oss.model.MatchMode;
 import com.aliyun.oss.model.PolicyConditions;
-import com.tars.oss.entity.OssCallbackParam;
-import com.tars.oss.entity.OssCallbackResult;
 import com.tars.oss.entity.OssPolicyResult;
-import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class OssServiceImpl implements OssService {
 
   @Value("${aliyun.oss.policy.expire}")
   private int ALIYUN_OSS_EXPIRE;
   @Value("${aliyun.oss.maxSize}")
   private int ALIYUN_OSS_MAX_SIZE;
-  @Value("${aliyun.oss.callback}")
-  private String ALIYUN_OSS_CALLBACK;
   @Value("${aliyun.oss.bucketName}")
   private String ALIYUN_OSS_BUCKET_NAME;
   @Value("${aliyun.oss.endpoint}")
@@ -51,12 +43,6 @@ public class OssServiceImpl implements OssService {
     Date expiration = new Date(expireEndTime);
     // 文件大小
     long maxSize = (long) ALIYUN_OSS_MAX_SIZE * 1024 * 1024;
-    // 回调
-    OssCallbackParam callback = new OssCallbackParam();
-    callback.setCallbackUrl(ALIYUN_OSS_CALLBACK);
-    callback.setCallbackBody(
-        "filename=${object}&size=${size}&mimeType=${mimeType}&height=${imageInfo.height}&width=${imageInfo.width}");
-    callback.setCallbackBodyType("application/x-www-form-urlencoded");
     // 提交节点
     String action = "http://" + ALIYUN_OSS_BUCKET_NAME + "." + ALIYUN_OSS_ENDPOINT;
     try {
@@ -69,33 +55,17 @@ public class OssServiceImpl implements OssService {
       byte[] binaryData = postPolicy.getBytes(StandardCharsets.UTF_8);
       String policy = BinaryUtil.toBase64String(binaryData);
       String signature = ossClient.calculatePostSignature(postPolicy);
-      String callbackData = BinaryUtil.toBase64String(
-          JSONUtil.parse(callback).toString().getBytes("utf-8"));
+
       // 返回结果
       result.setAccessKeyId(
           ossClient.getCredentialsProvider().getCredentials().getAccessKeyId());
       result.setPolicy(policy);
       result.setSignature(signature);
       result.setDir(dir);
-      result.setCallback(callbackData);
       result.setHost(action);
     } catch (Exception e) {
-      log.error("签名生成失败", e);
+//      log.error("签名生成失败", e);
     }
-    return result;
-  }
-
-  @Override
-  public OssCallbackResult callback(HttpServletRequest request) {
-    OssCallbackResult result = new OssCallbackResult();
-    String filename = request.getParameter("filename");
-    filename = "http://".concat(ALIYUN_OSS_BUCKET_NAME).concat(".")
-        .concat(ALIYUN_OSS_ENDPOINT).concat("/").concat(filename);
-    result.setFilename(filename);
-    result.setSize(request.getParameter("size"));
-    result.setMimeType(request.getParameter("mimeType"));
-    result.setWidth(request.getParameter("width"));
-    result.setHeight(request.getParameter("height"));
     return result;
   }
 }

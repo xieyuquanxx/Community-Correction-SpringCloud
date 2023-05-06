@@ -9,4 +9,4 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/xieyuquanxx/SpringCloudConfigRepo.git/
+          uri: https://gitee.com/csuxyq/spring-cloud-config.git/

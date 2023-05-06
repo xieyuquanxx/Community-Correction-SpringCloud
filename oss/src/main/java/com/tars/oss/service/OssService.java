@@ -1,8 +1,6 @@
 package com.tars.oss.service;
 
-import com.tars.oss.entity.OssCallbackResult;
 import com.tars.oss.entity.OssPolicyResult;
-import jakarta.servlet.http.HttpServletRequest;
 
 public interface OssService {
 
@@ -11,8 +9,4 @@ public interface OssService {
    */
   OssPolicyResult policy();
 
-  /**
-   * oss上传成功回调
-   */
-  OssCallbackResult callback(HttpServletRequest request);
 }

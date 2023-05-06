@@ -4,10 +4,8 @@ import com.aliyun.oss.OSSClient;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.tars.oss.api.ResponseResult;
-import com.tars.oss.entity.OssCallbackResult;
 import com.tars.oss.entity.OssPolicyResult;
-import com.tars.oss.service.OssServiceImpl;
-import jakarta.servlet.http.HttpServletRequest;
+import com.tars.oss.service.OssService;
 import java.io.IOException;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,7 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class OssController {
 
   @Autowired
-  private OssServiceImpl ossService;
+  private OssService ossService;
   @Autowired
   private OSSClient ossClient;
 
@@ -75,13 +71,4 @@ public class OssController {
     }
   }
 
-
-  //@ApiOperation(value = "oss上传成功回调")
-  @RequestMapping(value = "/callback", method = RequestMethod.POST)
-  @ResponseBody
-  public ResponseResult<OssCallbackResult> callback(HttpServletRequest request) {
-    OssCallbackResult ossCallbackResult = ossService.callback(
-        request);
-    return ResponseResult.success(ossCallbackResult);
-  }
 }
