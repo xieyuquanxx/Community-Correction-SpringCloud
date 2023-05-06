@@ -10,5 +10,5 @@ spring:
       server:
         git:
           uri: https://github.com/xieyuquanxx/Community-Correction-SpringCloud.git/
-          search-paths: configserver/src/main/resources
+          search-paths: configserver/src/main/resources/shared
 
