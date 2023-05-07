@@ -4,16 +4,14 @@ import com.tars.termination.api.ResponseResult;
 import com.tars.termination.entity.TermAnnounce;
 import com.tars.termination.remote.RemoteCrpService;
 import com.tars.termination.remote.RemoteOssService;
+import com.tars.termination.remote.RemoteWordService;
 import com.tars.termination.service.TermAnnounceService;
-import com.tars.termination.utils.WordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.SimpleFormatter;
 
 @RestController
 @RequestMapping("/term/announce")
@@ -26,6 +24,8 @@ public class TermAnnounceController {
     private RemoteCrpService crpService;
     @Autowired
     private RemoteOssService ossService;
+    @Autowired
+    private RemoteWordService wordService;
 
     @GetMapping("/count")
     public ResponseResult<Long> getCount() {
@@ -46,15 +46,16 @@ public class TermAnnounceController {
     public ResponseResult<String> export(@RequestBody TermAnnounce announce) {
         try {
             Map<String, Object> dataMap = new HashMap<>();
+            dataMap.put("title", "终止矫正宣告书");
             dataMap.put("dxbh", announce.getDxbh());
             dataMap.put("xgrq", announce.getXgrq());
             dataMap.put("xm", announce.getXm());
             dataMap.put("finish", announce.getFinish());
             dataMap.put("date", simpleFormatter.format(new Date()));
-            String filename = announce.getDxbh() + "的终止矫正宣告书.doc";
-            File file = WordUtil.exportAnnounceWord(filename, dataMap);
+//            String filename = announce.getDxbh() + "的终止矫正宣告书.doc";
+//            File file = wordUtil.exportAnnounceWord(filename, dataMap);
             // 根据宣告信息生成word，上传到oss上后将url返回
-            return ossService.upload(file);
+            return wordService.export(dataMap);
         } catch (Exception e) {
             return ResponseResult.fail("", e.getMessage());
         }
@@ -65,9 +66,7 @@ public class TermAnnounceController {
         try {
             List<TermAnnounce> list =
                     service.list().stream()
-                            .peek(e -> {
-                                e.setXm(crpService.getName(e.getDxbh()));
-                            }).toList();
+                            .peek(e -> e.setXm(crpService.getName(e.getDxbh()))).toList();
             return ResponseResult.success(list);
         } catch (Exception e) {
             return ResponseResult.fail(null, e.getMessage());

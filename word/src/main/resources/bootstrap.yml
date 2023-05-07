@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: word
+  profiles:
+    active: dev
+  cloud:
+    config: # config-server
+      uri: http://localhost:9000
+      failFast: true
+  freemarker:
+    cache: false
+    settings:
+      classic_compatible: true
+    suffix: .docx
+    charset: UTF-8
+    template-loader-path: classpath:/templates/
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+    http:
+      encoding:
+        multipart:
+          enabled: true
+          max-file-size: 50MB
+          max-request-size: 50MB
+server:
+  tomcat:
+    uri-encoding: UTF-8
+
+export_word:
+  outDirectory: /Users/xieyuquan/IdeaProjects/ccorrection/word/src/main/resources
+  basePackagePath: /templates/

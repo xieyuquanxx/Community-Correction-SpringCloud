@@ -16,5 +16,5 @@ public class CorrectionAnnouncement {
 
     private String xgrq;
     private String audio;
-    private Boolean finish;
+    private String finish;
 }
