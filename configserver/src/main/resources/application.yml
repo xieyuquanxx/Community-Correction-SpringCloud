@@ -10,3 +10,8 @@ spring:
       server:
         git:
           uri: https://gitee.com/csuxyq/spring-cloud-config.git/
+
+eureka:
+  client:
+    serviceUrl: # eureka-server的路径
+      defaultZone: http://localhost:9001/eureka/

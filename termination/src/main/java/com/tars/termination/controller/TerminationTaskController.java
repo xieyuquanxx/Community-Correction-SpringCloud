@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@CrossOrigin(origins = "*")
 public class TerminationTaskController {
     @Autowired
     private TerminationTaskService myService;

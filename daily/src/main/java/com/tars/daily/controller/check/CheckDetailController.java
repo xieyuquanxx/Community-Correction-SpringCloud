@@ -3,7 +3,7 @@ package com.tars.daily.controller.check;
 import com.tars.daily.api.ResponseResult;
 import com.tars.daily.entity.check.CheckDetail;
 import com.tars.daily.service.check.CheckDetailService;
-import com.tars.daily.service.remote.RemoteCrpService;
+import com.tars.daily.remote.RemoteCrpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class CheckDetailController {
     public ResponseResult<List<CheckDetail>> getCheckDetailByDxbh(@PathVariable("dxbh") String dxbh) {
         try {
             List<CheckDetail> list = service.query().eq("dxbh", dxbh)
-                                            .list();
+                    .list();
             return ResponseResult.success(list);
         } catch (Exception e) {
             return ResponseResult.fail(null, e.getMessage());
