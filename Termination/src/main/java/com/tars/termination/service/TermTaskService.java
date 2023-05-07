@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
-public class TerminationTaskService {
+public class TermTaskService {
     @Autowired
     private RuntimeService runtimeService;
 
@@ -31,30 +31,30 @@ public class TerminationTaskService {
     @Transactional
     public List<Task> getTasks(String assignee) {
         return taskService.createTaskQuery().taskAssignee(assignee)
-                          .list();
+                .list();
     }
 
     @Transactional
     public List<Task> getTasksByProcessId(String processId) {
         return taskService.createTaskQuery()
-                          .processInstanceId(processId)
-                          .list();
+                .processInstanceId(processId)
+                .list();
     }
 
     @Transactional
     public Task getTaskByProcessIdAndAssignee(String processId,
                                               String assignee) {
         return taskService.createTaskQuery()
-                          .processInstanceId(processId)
-                          .taskAssignee(assignee)
-                          .singleResult();
+                .processInstanceId(processId)
+                .taskAssignee(assignee)
+                .singleResult();
     }
 
     // 根据taskId来获取task
     @Transactional
     public Task getTaskById(String taskId) {
         return taskService.createTaskQuery()
-                          .taskId(taskId).singleResult();
+                .taskId(taskId).singleResult();
     }
 
     @Transactional

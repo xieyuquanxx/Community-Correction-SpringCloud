@@ -3,9 +3,6 @@ spring:
     config: # config-server的地址
       uri: http://localhost:9000
       failFast: true
-  #      discovery:
-  #        enabled: true
-  #        service-id: config-server
   application:
     name: oss
   profiles:

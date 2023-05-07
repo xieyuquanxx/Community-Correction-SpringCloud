@@ -9,8 +9,8 @@ import lombok.Data;
  * 终止矫正报备信息表
  */
 @Data
-@TableName("termination_info_tbl")
-public class TerminationInfo {
+@TableName("term_info_tbl")
+public class TermInfo {
     @TableId
     private String dxbh;
     @TableField(exist = false)
@@ -26,10 +26,12 @@ public class TerminationInfo {
     private String sfsj; // 是否收监
     private String sjzxlx; // 收监执行类型
     private String sjzxrq; // 收监执行日期
+    private String sjzxyy; // 收监执行原因
+
 
     private String cxhxsjzxyy; // 撤销缓刑收监执行原因
     private String cxjssjzxyy; // 撤销假释收监执行原因
-    private String sjzxyy; // 收监执行原因
+
 
     private String swsj; //死亡日期
     private String swlx; // 死亡类型

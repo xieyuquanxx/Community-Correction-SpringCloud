@@ -1,23 +1,18 @@
 package com.tars.termination.controller;
 
-import com.tars.termination.service.TerminationTaskService;
+import com.tars.termination.service.TermTaskService;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.Task;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-
 @RestController
-public class TerminationTaskController {
+public class TermTaskController {
     @Autowired
-    private TerminationTaskService myService;
+    private TermTaskService myService;
     @Autowired
     private RepositoryService repositoryService;
     @Autowired

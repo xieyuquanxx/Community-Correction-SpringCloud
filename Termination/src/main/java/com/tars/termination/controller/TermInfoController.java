@@ -1,22 +1,22 @@
 package com.tars.termination.controller;
 
 import com.tars.termination.api.ResponseResult;
-import com.tars.termination.entity.TerminationInfo;
+import com.tars.termination.entity.TermInfo;
 import com.tars.termination.remote.RemoteCrpService;
-import com.tars.termination.service.TerminationInfoService;
+import com.tars.termination.service.TermInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/termination")
+@RequestMapping("/term")
 @CrossOrigin(origins = "*")
-public class TerminationInfoController {
+public class TermInfoController {
     @Autowired
-    private TerminationInfoService service;
+    private TermInfoService service;
     @Autowired
-    private TerminationTaskController taskController;
+    private TermTaskController taskController;
     @Autowired
     private RemoteCrpService crpService;
 
@@ -27,11 +27,11 @@ public class TerminationInfoController {
      * @return 终止矫正信息
      */
     @GetMapping("/{dxbh}")
-    public ResponseResult<TerminationInfo> getTerminationInfoByDxbh(
+    public ResponseResult<TermInfo> getTerminationInfoByDxbh(
             @PathVariable("dxbh") String dxbh
     ) {
         try {
-            TerminationInfo info = service.query().eq("dxbh", dxbh).one();
+            TermInfo info = service.query().eq("dxbh", dxbh).one();
             if (info == null)
                 return ResponseResult.fail(null, "未找到终止矫正信息");
             info.setXm(crpService.getName(dxbh));
@@ -43,9 +43,9 @@ public class TerminationInfoController {
     }
 
     @GetMapping("/all")
-    public ResponseResult<List<TerminationInfo>> getAll() {
+    public ResponseResult<List<TermInfo>> getAll() {
         try {
-            List<TerminationInfo> list = service.list().stream()
+            List<TermInfo> list = service.list().stream()
                     .peek(e -> e.setXm(
                             crpService.getName(
                                     e.getDxbh())))
@@ -65,12 +65,12 @@ public class TerminationInfoController {
         try {
             // 随机从矫正对象库里拿一个矫正对象
             String dxbh = crpService.randomDxbh();
-            TerminationInfo info;
+            TermInfo info;
             do {
                 info = service.query().eq("dxbh", dxbh)
                         .one();
             } while (info != null);
-            info = new TerminationInfo();
+            info = new TermInfo();
             info.setProcessId(taskController.startProcessInstance());
             info.setDxbh(dxbh);
             info.setStep(1);
@@ -91,7 +91,7 @@ public class TerminationInfoController {
      * @return 返回保存状态
      */
     @PostMapping("/save")
-    public ResponseResult<Boolean> saveTerminationInfo(@RequestBody TerminationInfo info) {
+    public ResponseResult<Boolean> saveTerminationInfo(@RequestBody TermInfo info) {
         try {
             return ResponseResult.success(service.save(info));
         } catch (Exception e) {
@@ -101,7 +101,7 @@ public class TerminationInfoController {
     }
 
     @PostMapping("/update")
-    public ResponseResult<Boolean> updateTerminationInfo(@RequestBody TerminationInfo info) {
+    public ResponseResult<Boolean> updateTerminationInfo(@RequestBody TermInfo info) {
         try {
             // 社区矫正机构部分完成
             info.setStep(info.getStep() + 1);
@@ -116,7 +116,7 @@ public class TerminationInfoController {
     }
 
     @PostMapping("/store")
-    public ResponseResult<Boolean> storeTerminationInfo(@RequestBody TerminationInfo info) {
+    public ResponseResult<Boolean> storeTerminationInfo(@RequestBody TermInfo info) {
         try {
             service.update().eq("dxbh", info.getDxbh())
                     .update(info);
