@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
-import java.util.Random;
 
 @RestController
 @RequestMapping("/word")
@@ -21,10 +20,11 @@ public class WordController {
     private String basePath;
     @Value("${export_word.basePackagePath}")
     private String basePackagePath;
+
     @Autowired
     private RemoteOssService ossService;
 
-    public File create(Map<String, Object> dataModel, String templateName, String filePath) {
+    File create(Map<String, Object> dataModel, String templateName, String filePath) {
 
         try {
             filePath = basePath + filePath;
@@ -57,9 +57,9 @@ public class WordController {
     }
 
 
-    public File exportAnnounceWord(Map<String, Object> dataMap) {
+    File exportAnnounceWord(Map<String, Object> dataMap) {
         String ftlName = "announce.xml"; // 使用的模板文件
-        String fileName = ftlName.split("\\.")[0] + new Random().nextInt() + ".doc";
+        String fileName = ftlName.split("\\.")[0] + dataMap.get("dxbh") + ".doc";
         return create(dataMap, ftlName, "/word/" + fileName);
     }
 

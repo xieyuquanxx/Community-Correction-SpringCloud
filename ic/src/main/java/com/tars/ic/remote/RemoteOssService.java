@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-@FeignClient(value = "oss", url = "http://localhost:9099/oss")
+@FeignClient(value = "ic-oss", url = "http://localhost:9099/oss")
 public interface RemoteOssService {
 
     @RequestMapping(method = RequestMethod.POST, value = "/upload",

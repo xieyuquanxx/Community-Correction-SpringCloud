@@ -8,16 +8,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(value = "ic", url = "http://localhost:9099/ic/crp")
+@FeignClient(value = "ie-ic", url = "http://localhost:9099/ic/crp")
 public interface RemoteCrpService {
 
-  @RequestMapping(method = RequestMethod.POST, value = "/register"
-      , consumes = "application/json")
-  ResponseResult<Boolean> register(@RequestBody CorrectionPeople crp);
+    @RequestMapping(method = RequestMethod.POST, value = "/register"
+            , consumes = "application/json")
+    ResponseResult<Boolean> register(@RequestBody CorrectionPeople crp);
 
-  @RequestMapping(method = RequestMethod.POST, value = "/dcpg/{dxbh}"
-      , consumes = "application/json")
-  ResponseResult<Boolean> finishDcpg(@PathVariable("dxbh") String dxbh);
+    @RequestMapping(method = RequestMethod.POST, value = "/dcpg/{dxbh}"
+            , consumes = "application/json")
+    ResponseResult<Boolean> finishDcpg(@PathVariable("dxbh") String dxbh);
 
 
 }

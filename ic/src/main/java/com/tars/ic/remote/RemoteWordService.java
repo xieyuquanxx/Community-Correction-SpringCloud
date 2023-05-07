@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
-@FeignClient(value = "word", url = "http://localhost:9099/word")
+@FeignClient(value = "ic-word", url = "http://localhost:9099/word")
 public interface RemoteWordService {
 
     @RequestMapping(method = RequestMethod.POST, value = "/export"

@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
-@FeignClient(value = "oss", url = "http://localhost:9099/oss")
+@FeignClient(value = "term-oss", url = "http://localhost:9099/oss")
 public interface RemoteOssService {
 
     @RequestMapping(method = RequestMethod.POST, value = "/upload_f")
