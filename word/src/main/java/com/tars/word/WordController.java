@@ -75,4 +75,16 @@ public class WordController {
         }
     }
 
+    @PostMapping("/info")
+    public ResponseResult<String> exportInfo(@RequestBody Map<String, Object> dataMap) {
+        try {
+            String xmlName = (String) dataMap.get("xmlName");
+            String filename = xmlName.split("\\.")[0] + dataMap.get("xm") + "信息表.doc";
+            File file = create(dataMap, xmlName, "/word/" + filename);
+            return ossService.upload(file);
+        } catch (Exception e) {
+            return ResponseResult.fail("", e.getMessage());
+        }
+    }
+
 }

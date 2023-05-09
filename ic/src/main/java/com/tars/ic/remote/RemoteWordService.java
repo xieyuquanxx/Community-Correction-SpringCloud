@@ -14,7 +14,9 @@ import java.util.Map;
 @FeignClient(value = "ic-word", url = "http://localhost:9099/word")
 public interface RemoteWordService {
 
-    @RequestMapping(method = RequestMethod.POST, value = "/export"
-    )
+    @RequestMapping(method = RequestMethod.POST, value = "/export")
     ResponseResult<String> export(@RequestBody Map<String, Object> dataMap);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/info")
+    ResponseResult<String> exportInfo(@RequestBody Map<String, Object> dataMap);
 }

@@ -7,14 +7,16 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-@TableName("crt_tbl")
+@TableName("recvcrp_team")
 @Builder
 public class CorrectionTeamTemp {
     @TableId(type = IdType.AUTO)
-    Integer id; // 小组id
-    
-    String teamName; // 小组名
-    String monitor; // 小组队长
-    Integer teamNumber; // 小组成员个数
+    Long id; // 小组id
 
+    String name; // 小组名
+    String monitor; // 小组队长
+    Integer number; // 小组成员个数
+
+    String gmt_create;
+    String gmt_modified;
 }

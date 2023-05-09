@@ -4,14 +4,15 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@TableName("crplan_tbl")
+@TableName("recvcrp_plan")
 public class CorrectionPlan {
     @TableId(type = IdType.AUTO)
-    private Integer id;// 方案id
+    private Long id;// 方案id
+    String gmt_create;
+    String gmt_modified;
 
     private String dxbh; // 对象编号
 

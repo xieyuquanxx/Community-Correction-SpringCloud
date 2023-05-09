@@ -1,5 +1,6 @@
 package com.tars.ic.service.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.update.UpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tars.ic.entity.CorrectionPeople;
@@ -11,4 +12,5 @@ import org.springframework.stereotype.Service;
 public class CrpServiceImpl
         extends ServiceImpl<CrpMapper, CorrectionPeople>
         implements CrpService {
+
 }

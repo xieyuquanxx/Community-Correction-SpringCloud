@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @FeignClient(value = "ie-oss", url = "http://localhost:9099/oss")
 public interface RemoteOssService {
 
-    @RequestMapping(method = RequestMethod.POST, value = "/upload",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    ResponseResult<String> upload(@RequestParam("file") MultipartFile file);
+  @RequestMapping(method = RequestMethod.POST, value = "/upload",
+      consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+  ResponseResult<String> upload(MultipartFile file);
 }

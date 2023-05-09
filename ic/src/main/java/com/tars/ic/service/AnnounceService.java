@@ -1,8 +1,8 @@
 package com.tars.ic.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.tars.ic.entity.CorrectionAnnouncement;
+import com.tars.ic.entity.CorrectionAnnounce;
 
 
-public interface AnnounceService extends IService<CorrectionAnnouncement> {
+public interface AnnounceService extends IService<CorrectionAnnounce> {
 }

@@ -11,18 +11,17 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class CorrectionTeam {
+    Long id; // 小组id
+    String name; // 小组名
+    String monitor; // 小组队长
+    Integer number; // 小组成员个数
+    List<String> workers; // 小组成员
 
-  Integer id; // 小组id
-  String teamName; // 小组名
-  String monitor; // 小组队长
-  Integer teamNumber; // 小组成员个数
-  List<String> workers; // 小组成员
-
-  public CorrectionTeam(CorrectionTeamTemp temp) {
-    workers = new ArrayList<>();
-    id = temp.id;
-    teamName = temp.teamName;
-    monitor = temp.monitor;
-    teamNumber = temp.teamNumber;
-  }
+    public CorrectionTeam(CorrectionTeamTemp temp) {
+        workers = new ArrayList<>();
+        id = temp.id;
+        name = temp.name;
+        monitor = temp.monitor;
+        number = temp.number;
+    }
 }
