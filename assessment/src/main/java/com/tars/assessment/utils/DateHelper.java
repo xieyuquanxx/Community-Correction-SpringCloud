@@ -4,10 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateHelper {
-    private static SimpleDateFormat dateFormat =
-            new SimpleDateFormat("YYYY-MM-dd");
 
-    public static String getNow() {
-        return dateFormat.format(new Date());
-    }
+  private static final SimpleDateFormat dateFormat =
+      new SimpleDateFormat("yyyy-MM-dd");
+
+  public static String getNow() {
+    return dateFormat.format(new Date());
+  }
 }

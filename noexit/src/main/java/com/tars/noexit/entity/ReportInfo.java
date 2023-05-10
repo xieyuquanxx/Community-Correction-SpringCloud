@@ -1,5 +1,6 @@
 package com.tars.noexit.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -9,10 +10,14 @@ import lombok.Data;
  * 出入境报备信息表
  */
 @Data
-@TableName("exit_bb_tbl")
+@TableName("noexit_report")
 public class ReportInfo {
 
-  @TableId
+  @TableId(type = IdType.AUTO)
+  private Long id;// 方案id
+  String gmt_create;
+  String gmt_modified;
+
   private String dxbh;
 
   @TableField(exist = false)
