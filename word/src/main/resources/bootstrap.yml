@@ -2,10 +2,10 @@ spring:
   application:
     name: word
   profiles:
-    active: dev
+    active: prod
   cloud:
     config: # config-server
-      uri: http://localhost:9000
+      uri: http://config-server:9000
       failFast: true
   freemarker:
     cache: false
@@ -29,5 +29,5 @@ server:
     uri-encoding: UTF-8
 
 export_word:
-  outDirectory: /Users/xieyuquan/IdeaProjects/ccorrection/word/src/main/resources
+  outDirectory: /resources
   basePackagePath: /templates/

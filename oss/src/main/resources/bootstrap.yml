@@ -1,12 +1,12 @@
 spring:
   cloud:
     config: # config-server的地址
-      uri: http://localhost:9000
+      uri: http://config-server:9000
       failFast: true
   application:
     name: oss
   profiles:
-    active: dev
+    active: prod
   servlet:
     multipart:
       max-file-size: 50MB
