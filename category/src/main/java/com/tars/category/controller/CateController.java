@@ -25,8 +25,7 @@ public class CateController {
         try {
             List<CategoryInfo> list = service.list().stream()
                     .peek(item -> item.setXm(
-                            crpService.getName(
-                                    item.getDxbh())))
+                            crpService.getName(item.getDxbh())))
                     .toList();
             return ResponseResult.success(list);
         } catch (Exception e) {

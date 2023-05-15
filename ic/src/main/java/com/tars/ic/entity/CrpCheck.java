@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("crp_check_tbl")
+@TableName("recvcrp_nocheck")
 public class CrpCheck {
 
   @TableId(type = IdType.AUTO)

@@ -96,9 +96,9 @@ public class CrplanController {
     }
   }
 
-  @GetMapping("/{dxbh}")
+  @GetMapping("/plan")
   public ResponseResult<CorrectionPlan> getPlanByDxbh(
-      @PathVariable("dxbh") String dxbh
+      @RequestParam("dxbh") String dxbh
   ) {
     CorrectionPlan temp = service.query().eq("dxbh", dxbh).one();
     if (temp == null) {
